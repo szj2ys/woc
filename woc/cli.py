@@ -85,9 +85,9 @@ def create():
     os.system(f'bash {FILE}')
 
 
-@cli.command(help='git pull to remote')
+@cli.command(help='git push to remote')
 def gitp():
-    FILE = join(ROOT, 'scripts', 'gitpull.sh')
+    FILE = join(ROOT, 'scripts', 'gitpush.sh')
     os.system(f'bash {FILE}')
 
 
@@ -147,8 +147,6 @@ def gittuto():
 
     git stash # 储存修改
 
-    git fetch # 拉取最新工程
-
     git rebase # 与本地分支合并
 
     git stash pop # 弹出储存文件，此时新文件可能会与你的文件产生冲突，解决冲突。
@@ -172,8 +170,6 @@ def gittuto():
 
     # 把这个目录变成git可以管理的仓库
     # git init
-
-    # git fetch
 
     # git add -A  提交所有变化
     # git add -u  提交被修改(modified)和被删除(deleted)文件，不包括新文件(new)
@@ -203,6 +199,7 @@ def gittuto():
 
     # 获取远程库与本地同步合并
     # git pull --rebase origin master
+    git pull = git fetch + git merge
 
     # 查看改动情况
     # git status
@@ -227,6 +224,9 @@ git log --oneline --graph
 
 # git log 命令可以显示所有提交过的版本信息，而git reflog 可以查看所有分支的所有操作记录（包括已经被删除的 commit 记录和 reset 的操作）
 git reflog # 找到删除的id后退出，再执行git reset --hard id回退到删除以前的状态
+
+# 删除cache file
+git rm -r --cached .
     '''
     print(GIT_TUTORIALS)
 
