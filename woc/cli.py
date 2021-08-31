@@ -110,6 +110,7 @@ alias l='ls -lha'
 alias ..='cd ..'
 alias axel='axel -n 100'
 alias free="free -h"
+alias df="df -h"
 alias vi="vim"
 alias ~="cd ~"
 alias sh="bash"
