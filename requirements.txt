@@ -1,0 +1,8 @@
+jupyter
+environs
+fire
+click
+click_help_colors
+yapf
+autoflake
+twine
