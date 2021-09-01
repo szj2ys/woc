@@ -243,6 +243,12 @@ def delete():
     os.system(f'bash {FILE}')
 
 
+@cli.command(help='config jupyter notebook extension and theme')
+def configjupyter():
+    FILE = join(ROOT, 'scripts', 'setnotebook.sh')
+    os.system(f'bash {FILE}')
+
+
 @cli.command(help='run install')
 def install():
     FILE = join(ROOT, 'scripts', 'install.sh')
