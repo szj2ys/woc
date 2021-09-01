@@ -4,6 +4,7 @@ import os
 import sys
 import subprocess
 from tqdm import tqdm
+from rich.progress import track
 from os.path import dirname, abspath, join
 
 ROOT = dirname(abspath(__file__))
@@ -85,16 +86,24 @@ def cli():
 # http://patorjk.com/software/taag/#p=display&h=0&v=0&f=Graffiti&t=funlp
 
 
-@cli.command(help='run clean')
+@cli.command(help='clean useless path and file')
 def clean():
     FILE = join(ROOT, 'scripts', 'clean.sh')
     subprocess.run(f'bash {FILE}'.split())
 
 
-@cli.command(help='run create')
+@cli.command(help='create pipenv environment base current directory')
 def create():
     FILE = join(ROOT, 'scripts', 'create.sh')
     subprocess.run(f'bash {FILE}'.split())
+
+
+@cli.command(help='render a beautiful tree with given path')
+@click.argument('path', nargs=-1)
+def tree(path):
+    FILE = join(ROOT, 'tree.py')
+    DIR = path[0] if path else os.getcwd()
+    subprocess.run(f'python3 {FILE} {DIR}'.split())
 
 
 @cli.command(help='''
@@ -110,10 +119,14 @@ Examples:\n
               show_default=True,
               help="Whether to use pypi official source")
 def pip(pkgs, yes):
-    if pkgs in ['requirements.txt', 'requirements-dev.txt']:
-        with open('pkgs', 'r') as f:
+
+    if pkgs[0] in ['requirements.txt', 'requirements-dev.txt']:
+        file = pkgs[0]
+        with open(file, 'r') as f:
             pkgs = [pkg.strip() for pkg in f.readlines()]
-    for pkg in tqdm(pkgs):
+
+    for pkg in track(pkgs):
+        # for pkg in tqdm(pkgs):
         if yes:
             subprocess.run(f'pip3 install {pkg}'.split())
         else:
@@ -122,13 +135,13 @@ def pip(pkgs, yes):
                 .split())
 
 
-@cli.command(help='git push to remote')
+@cli.command(help='push changes to remote git')
 def gitp():
     FILE = join(ROOT, 'scripts', 'gitpush.sh')
     subprocess.run(f'bash {FILE}'.split())
 
 
-@cli.command(help='git rm all cache files')
+@cli.command(help='remove all cached files from staging area')
 def gitrmc():
     subprocess.run('git rm -r --cache .'.split())
 
@@ -268,13 +281,13 @@ git rm -r --cached .
     click.echo_via_pager(GIT_TUTORIALS)
 
 
-@cli.command(help='install linux packages use apt-get')
+@cli.command(help='install linux packages through apt-get')
 def aptinstall():
     FILE = join(ROOT, 'scripts', 'aptinstall.sh')
     subprocess.run(f'bash {FILE}'.split())
 
 
-@cli.command(help='run delete')
+@cli.command(help='delete pipenv environment')
 def delete():
     FILE = join(ROOT, 'scripts', 'delete.sh')
     subprocess.run(f'bash {FILE}'.split())
@@ -313,12 +326,6 @@ def install():
 @cli.command(help='run publish')
 def publish():
     FILE = join(ROOT, 'scripts', 'publish.sh')
-    subprocess.run(f'bash {FILE}'.split())
-
-
-@cli.command(help='run requirements')
-def require():
-    FILE = join(ROOT, 'scripts', 'requirements.sh')
     subprocess.run(f'bash {FILE}'.split())
 
 

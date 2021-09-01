@@ -2,6 +2,7 @@ jupyter
 pipenv
 environs
 tqdm
+rich
 click
 click_help_colors
 yapf

@@ -32,25 +32,31 @@
 </p>
 
 
-# Installation
+## Installation
 ```shell
 pip install woc
 ```
 you may want to checkout the version
 ```shell
-woc version
+woc -v
 ```
 Haha, `woc` is now on your environment, having fun with it, enjoy ...
 
-# Usage
+## Usage
+
+Let's figure out what I can do...
 ```shell
 woc --help
-pipi --help
+```
+Sometimes it is useful to be allowed to invoke more than one subcommand in one go.
+For instance:
+```shell
+woc publish clean
 ```
 
 
-
-
+## REFERENCES
+- [`click` Documents](https://click.palletsprojects.com)
 
 
 
