@@ -243,6 +243,23 @@ def delete():
     os.system(f'bash {FILE}')
 
 
+@cli.command(help='install node')
+def installnode():
+    if sys.platform.startswith('darwin'):
+        os.system(f'brew install node')
+    elif sys.platform.startswith('win'):
+        pass
+    else:
+        # 先安装node包管理器nvm
+        os.system(
+            f'wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash'
+        )
+        os.system(f'export NVM_DIR="$HOME/.nvm"')
+        os.system(f'nvm --version')
+        # 安装最新版node
+        os.system(f'nvm install node')
+
+
 @cli.command(help='config jupyter notebook extension and theme')
 def configjupyter():
     FILE = join(ROOT, 'scripts', 'setnotebook.sh')
