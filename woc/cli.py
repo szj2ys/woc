@@ -107,6 +107,7 @@ def tree(path):
 
 
 @cli.command(help='''
+woc pip --help\n
 Examples:\n
     woc pip fire just scrapy -y\n
     woc pip requirements.txt
