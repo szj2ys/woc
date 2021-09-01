@@ -123,7 +123,7 @@ def pip(pkgs, yes):
 @cli.command(help='git push to remote')
 def gitp():
     FILE = join(ROOT, 'scripts', 'gitpush.sh')
-    subprocess.Popen(f'bash {FILE}'.split())
+    subprocess.run(f'bash {FILE}'.split())
 
 
 @cli.command(help='git rm all cache files')
