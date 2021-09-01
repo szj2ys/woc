@@ -2,7 +2,7 @@
 # *_*coding:utf-8 *_*
 import os
 import sys
-from pathlib import Path
+from tqdm import tqdm
 from os.path import dirname, abspath, join
 
 ROOT = dirname(abspath(__file__))
@@ -10,8 +10,20 @@ import click
 from click_help_colors import HelpColorsGroup
 
 
+def print_version(ctx, param, value):
+    if not value or ctx.resilient_parsing:
+        return
+    package_conf = {}
+    with open(join(ROOT, "__version__.py")) as f:
+        exec(f.read(), package_conf)
+    # click.secho(package_conf['__version__'], fg='green')
+    click.secho(package_conf['__version__'], blink=True, bold=True)
+    # ctx.exit()
+
+
 # http://patorjk.com/software/taag/#p=display&f=Graffiti&t=hello
-@click.group(cls=HelpColorsGroup,
+@click.group(chain=True,
+             cls=HelpColorsGroup,
              help_headers_color='yellow',
              help_options_color='magenta',
              help_options_custom_colors={
@@ -26,6 +38,13 @@ from click_help_colors import HelpColorsGroup
                  'commit': 'blue',
                  'save': 'blue',
              })
+@click.option('-v',
+              '--version',
+              is_flag=True,
+              callback=print_version,
+              expose_value=False,
+              is_eager=True)
+@click.option('--debug/--no-debug', default=False)
 def cli():
     """
 
@@ -64,13 +83,6 @@ def cli():
 
 
 # http://patorjk.com/software/taag/#p=display&h=0&v=0&f=Graffiti&t=funlp
-@cli.command(help='Print version.')
-def version():
-    here = Path(__file__).parent.absolute()
-    package_conf = {}
-    with open(os.path.join(here, "__version__.py")) as f:
-        exec(f.read(), package_conf)
-    print(package_conf['__version__'])
 
 
 @cli.command(help='run clean')
@@ -83,6 +95,30 @@ def clean():
 def create():
     FILE = join(ROOT, 'scripts', 'create.sh')
     os.system(f'bash {FILE}')
+
+
+@cli.command(help='download vedio')
+@click.argument('command', nargs=-1, required=True)
+def dl(command):
+    os.system(f'you-get {command}')
+
+
+@cli.command(help='install python package')
+@click.argument('pkgs', nargs=-1, required=True)
+@click.option('-y',
+              '--yes',
+              is_flag=True,
+              default=False,
+              show_default=True,
+              help="Whether to use pypi official source")
+def pip(pkgs, yes):
+    for pkg in tqdm(pkgs):
+        if yes:
+            os.system(f'pip3 install {pkg}')
+        else:
+            os.system(
+                f'pip3 install {pkg} -i https://mirrors.aliyun.com/pypi/simple'
+            )
 
 
 @cli.command(help='git push to remote')
@@ -133,7 +169,7 @@ alias jl="jupyter lab"
 alias imongo="sudo /usr/local/mongodb/bin/mongod --dbpath=/usr/local/mongodb/data/db/"
    
 '''
-    print(ALIASES)
+    click.secho(ALIASES, blink=True)
 
 
 @cli.command(help='print git tutorials')
@@ -228,7 +264,7 @@ git reflog # 找到删除的id后退出，再执行git reset --hard id回退到�
 # 删除cache file
 git rm -r --cached .
     '''
-    print(GIT_TUTORIALS)
+    click.echo_via_pager(GIT_TUTORIALS)
 
 
 @cli.command(help='install linux packages use apt-get')
@@ -250,6 +286,7 @@ def installnode():
     elif sys.platform.startswith('win'):
         pass
     else:
+        # https://developer.aliyun.com/article/760687
         # 先安装node包管理器nvm
         os.system(
             f'wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash'
