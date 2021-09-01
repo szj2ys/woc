@@ -1,7 +1,7 @@
 jupyter
 pipenv
 environs
-fire
+tqdm
 click
 click_help_colors
 yapf

@@ -91,7 +91,6 @@ setup(
     entry_points={
         "console_scripts": [
             "woc=woc.cli:execute",
-            "pipi=woc.pipinstall:main",
         ],
     },
     license="MIT",  # BSD
