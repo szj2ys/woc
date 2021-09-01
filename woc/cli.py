@@ -23,7 +23,8 @@ def print_version(ctx, param, value):
 
 
 # http://patorjk.com/software/taag/#p=display&f=Graffiti&t=hello
-@click.group(cls=HelpColorsGroup,
+@click.group(chain=True,
+             cls=HelpColorsGroup,
              help_headers_color='yellow',
              help_options_color='magenta',
              help_options_custom_colors={
@@ -87,22 +88,20 @@ def cli():
 @cli.command(help='run clean')
 def clean():
     FILE = join(ROOT, 'scripts', 'clean.sh')
-    subprocess.Popen(f'bash {FILE}'.split())
+    subprocess.run(f'bash {FILE}'.split())
 
 
 @cli.command(help='run create')
 def create():
     FILE = join(ROOT, 'scripts', 'create.sh')
-    subprocess.Popen(f'bash {FILE}'.split())
+    subprocess.run(f'bash {FILE}'.split())
 
 
-@cli.command(help='download vedio')
-@click.argument('command', nargs=-1, required=True)
-def dl(command):
-    subprocess.Popen(f'you-get {command}'.split())
-
-
-@cli.command(help='install python package')
+@cli.command(help='''
+Examples:\n
+    woc pip fire just scrapy -y\n
+    woc pip requirements.txt
+''')
 @click.argument('pkgs', nargs=-1, required=True)
 @click.option('-y',
               '--yes',
@@ -111,11 +110,14 @@ def dl(command):
               show_default=True,
               help="Whether to use pypi official source")
 def pip(pkgs, yes):
+    if pkgs in ['requirements.txt', 'requirements-dev.txt']:
+        with open('pkgs', 'r') as f:
+            pkgs = [pkg.strip() for pkg in f.readlines()]
     for pkg in tqdm(pkgs):
         if yes:
-            subprocess.Popen(f'pip3 install {pkg}'.split())
+            subprocess.run(f'pip3 install {pkg}'.split())
         else:
-            subprocess.Popen(
+            subprocess.run(
                 f'pip3 install {pkg} -i https://mirrors.aliyun.com/pypi/simple'
                 .split())
 
@@ -128,13 +130,13 @@ def gitp():
 
 @cli.command(help='git rm all cache files')
 def gitrmc():
-    subprocess.Popen('git rm -r --cache .'.split())
+    subprocess.run('git rm -r --cache .'.split())
 
 
 @cli.command(help='deploy hexo blog')
 def hexod():
     FILE = join(ROOT, 'scripts', 'deploy.sh')
-    subprocess.Popen(f'bash {FILE}'.split())
+    subprocess.run(f'bash {FILE}'.split())
 
 
 @cli.command(help='print alias')
@@ -269,61 +271,61 @@ git rm -r --cached .
 @cli.command(help='install linux packages use apt-get')
 def aptinstall():
     FILE = join(ROOT, 'scripts', 'aptinstall.sh')
-    subprocess.Popen(f'bash {FILE}'.split())
+    subprocess.run(f'bash {FILE}'.split())
 
 
 @cli.command(help='run delete')
 def delete():
     FILE = join(ROOT, 'scripts', 'delete.sh')
-    subprocess.Popen(f'bash {FILE}'.split())
+    subprocess.run(f'bash {FILE}'.split())
 
 
 @cli.command(help='install node')
 def installnode():
     if sys.platform.startswith('darwin'):
-        subprocess.Popen(f'brew install node'.split())
+        subprocess.run(f'brew install node'.split())
     elif sys.platform.startswith('win'):
         pass
     else:
         # https://developer.aliyun.com/article/760687
         # 先安装node包管理器nvm
-        subprocess.Popen(
+        subprocess.run(
             f'wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash'
             .split())
-        subprocess.Popen(f'export NVM_DIR="$HOME/.nvm"'.split())
-        subprocess.Popen(f'nvm --version'.split())
+        subprocess.run(f'export NVM_DIR="$HOME/.nvm"'.split())
+        subprocess.run(f'nvm --version'.split())
         # 安装最新版node
-        subprocess.Popen(f'nvm install node'.split())
+        subprocess.run(f'nvm install node'.split())
 
 
 @cli.command(help='config jupyter notebook extension and theme')
 def configjupyter():
     FILE = join(ROOT, 'scripts', 'setnotebook.sh')
-    subprocess.Popen(f'bash {FILE}'.split())
+    subprocess.run(f'bash {FILE}'.split())
 
 
 @cli.command(help='run install')
 def install():
     FILE = join(ROOT, 'scripts', 'install.sh')
-    subprocess.Popen(f'bash {FILE}'.split())
+    subprocess.run(f'bash {FILE}'.split())
 
 
 @cli.command(help='run publish')
 def publish():
     FILE = join(ROOT, 'scripts', 'publish.sh')
-    subprocess.Popen(f'bash {FILE}'.split())
+    subprocess.run(f'bash {FILE}'.split())
 
 
 @cli.command(help='run requirements')
 def require():
     FILE = join(ROOT, 'scripts', 'requirements.sh')
-    subprocess.Popen(f'bash {FILE}'.split())
+    subprocess.run(f'bash {FILE}'.split())
 
 
 @cli.command(help='run python script')
 def run():
     FILE = join(ROOT, 'scripts', 'run.sh')
-    subprocess.Popen(f'bash {FILE}'.split())
+    subprocess.run(f'bash {FILE}'.split())
 
 
 def execute():
