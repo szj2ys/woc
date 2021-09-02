@@ -182,6 +182,8 @@ def docs(which):
         webbrowser.open('https://keras.io/examples/')
     elif which == 'sklearn':
         webbrowser.open('https://scikit-learn.org/stable/')
+    else:
+        webbrowser.open('www.songzhijun.com')
 
 
 @cli.command(short_help='install something useful')
