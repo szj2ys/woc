@@ -5,6 +5,7 @@ import sys
 import subprocess
 from tqdm import tqdm
 from rich.progress import track
+from rich.console import Console
 from os.path import dirname, abspath, join
 from woc.utils import render_markdown
 import webbrowser
@@ -153,7 +154,9 @@ def git(do):
 
     """
     if do == 'push' or do == 'p':
-        subprocess.run(f"bash {join(ROOT, 'scripts', 'gitpush.sh')}".split())
+        with Console().status("[bold green]Working on tasks...") as status:
+            subprocess.run(f"bash"
+                           f" {join(ROOT, 'scripts', 'gitpush.sh')}".split())
     elif do == 'cache' or do == 'c':
         subprocess.run('git rm -r --cache .'.split())
     else:
