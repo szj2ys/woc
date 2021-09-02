@@ -6,6 +6,8 @@ import subprocess
 from tqdm import tqdm
 from rich.progress import track
 from os.path import dirname, abspath, join
+from woc.utils import render_markdown
+import webbrowser
 
 ROOT = dirname(abspath(__file__))
 import click
@@ -47,39 +49,10 @@ def print_version(ctx, param, value):
               expose_value=False,
               is_eager=True)
 def cli():
-    """
-
-                                /T /I.
-                               / |/ | .-~/.
-                           T\ Y  I  |/  /  _
-          /T               | \I  |  I  Y.-~/
-         I l   /I       T\ |  |  l  |  T  /
-  __  | \l   \l  \I l __l  l   \   `  _. |
-  \ ~-l  `\   `\  \  \\ ~\  \   `. .-~   |
-   \   ~-. "-.  `  \  ^._ ^. "-.  /  \   |
- .--~-._  ~-  `  _  ~-_.-"-." ._ /._ ." ./
-  >--.  ~-.   ._  ~>-"    "\\   7   7   ]
- ^.___~"--._    ~-{  .-~ .  `\ Y . /    |
-  <__ ~"-.  ~       /_/   \   \I  Y   : |
-    ^-.__           ~(_/   \   >._:   | l
-        ^--.,___.-~"  /_/   !  `-.~"--l_
-               (_/ .  ~(   /'     "~"--,Y   -=b-.
-                (_/ .  \  :           / l      c"~o \
-                 \ /    `.    .     .^   \_.-~"~--.  )
-                  (_/ .   `  /     /       !         )/
-                   / / _.   '.   .':      /
-                 /_/ . ' .-~" `.  / \  \               ,v=-
-                  ~( /   '  :   | K   "-.~-.______//=-
-                      "-,.    l   I/ \_    __{--->._(==-
-                        //(     \ <            ~"~"   \\=-
-                       /' /\     \  \        ,v=
-                     .^. / /\     "  }__ //=-
-                    / / ' '  "-.,__ {---(==-
-                  .^ '        :  T   ~" \\ =-
-                  / ./. .| .|. \
-                 / .  .  . : | :!
-                (_/  /   | | j-" _)
-                ~-<_(_.^-~"˜¤¹
+    """\b
+__    __ ____  ____
+\ \/\/ // () \/ (__`
+ \_/\_/ \____/\____)
 """
 
 
@@ -92,10 +65,26 @@ def clean():
     subprocess.run(f'bash {FILE}'.split())
 
 
-@cli.command(help='create pipenv environment base current directory')
-def create():
-    FILE = join(ROOT, 'scripts', 'create.sh')
-    subprocess.run(f'bash {FILE}'.split())
+@cli.command(short_help='pipenv virtual environment pipline')
+@click.option('-c',
+              '--create',
+              is_flag=True,
+              default=False,
+              help="create pipenv environment base current directory")
+@click.option('-d',
+              '--delete',
+              is_flag=True,
+              default=False,
+              help="delete pipenv environment base current directory")
+def pipenv(create, delete):
+    if create:
+        FILE = join(ROOT, 'scripts', 'create.sh')
+        subprocess.run(f'bash {FILE}'.split())
+    elif delete:
+        FILE = join(ROOT, 'scripts', 'delete.sh')
+        subprocess.run(f'bash {FILE}'.split())
+    else:
+        click.secho('No pipline, please checkout your command...', fg='red')
 
 
 @cli.command(help='render a beautiful tree with given path')
@@ -106,20 +95,23 @@ def tree(path):
     subprocess.run(f'python3 {FILE} {DIR}'.split())
 
 
-@cli.command(help='''
-woc pip --help\n
-Examples:\n
-    woc pip fire just scrapy -y\n
-    woc pip requirements.txt
-''')
+@cli.command(short_help='install python package')
 @click.argument('pkgs', nargs=-1, required=True)
 @click.option('-y',
               '--yes',
               is_flag=True,
               default=False,
               show_default=True,
-              help="Whether to use pypi official source")
+              help="whether to use pypi official source")
 def pip(pkgs, yes):
+    """Examples:
+
+    \b
+            install packages use pypi:
+                - woc pip fire just scrapy -y
+            install requirements.txt:
+                - woc pip requirements.txt
+    """
 
     if pkgs[0] in ['requirements.txt', 'requirements-dev.txt']:
         file = pkgs[0]
@@ -136,15 +128,22 @@ def pip(pkgs, yes):
                 .split())
 
 
-@cli.command(help='push changes to remote git')
-def gitp():
-    FILE = join(ROOT, 'scripts', 'gitpush.sh')
-    subprocess.run(f'bash {FILE}'.split())
+@cli.command(short_help='simplified git pipline')
+@click.argument('do', nargs=1, required=True)
+def git(do):
+    """Examples:
 
+    \b
+            push changes to remote git repo:
+                - woc git p | push
+            remove all cached files from staging area:
+                - woc git c | cache
 
-@cli.command(help='remove all cached files from staging area')
-def gitrmc():
-    subprocess.run('git rm -r --cache .'.split())
+    """
+    if do == 'push' or do == 'p':
+        subprocess.run(f"bash {join(ROOT, 'scripts', 'gitpush.sh')}".split())
+    elif do == 'cache' or do == 'c':
+        subprocess.run('git rm -r --cache .'.split())
 
 
 @cli.command(help='deploy hexo blog')
@@ -155,161 +154,65 @@ def hexod():
 
 @cli.command(help='print alias')
 def alias():
-    ALIASES = '''
-alias ll='ls -lh'
-alias l='ls -lha'
-alias ..='cd ..'
-alias axel='axel -n 100'
-alias free="free -h"
-alias df="df -h"
-alias vi="vim"
-alias ~="cd ~"
-alias sh="bash"
-
-# pathes
-alias cddow="cd ~/Downloads/;pwd"
-alias cdh="cd ~;pwd"
-alias cddoc="cd ~/Documents/;pwd"
-alias cdmusic="cd ~/Music;pwd"
-alias cdgitee="cd ~/Music/GiteProjects/"
-alias cdgithub="cd ~/Music/GithubProjects/"
-
-#alias jp="jupyter notebook --no-browser --allow-root >&1 &"
-alias jp="jupyter notebook --no-browser"
-
-#alias jl="jupyter lab --allow-root >&1 &"
-alias jl="jupyter lab"
-
-# start mongodb server
-alias imongo="sudo /usr/local/mongodb/bin/mongod --dbpath=/usr/local/mongodb/data/db/"
-   
-'''
-    click.secho(ALIASES, blink=True)
+    render_markdown(join(ROOT, 'resources', 'Alias.md'))
 
 
-@cli.command(help='print git tutorials')
-def gittuto():
-    GIT_TUTORIALS = '''
-    ## Push代码的建议执行顺序
+@cli.command(short_help='show document')
+@click.argument('which', nargs=1, required=True)
+def docs(which):
+    """👀Docs👀
 
-    git status #查看修改状态
-
-    # git checkout filename #放弃某文件的修改。
-
-    git stash # 储存修改
-
-    git rebase # 与本地分支合并
-
-    git stash pop # 弹出储存文件，此时新文件可能会与你的文件产生冲突，解决冲突。
-
-    # git add filename 添加某个修改文件
-
-    git add . # 提交所有加点
-
-    # git reset HEAD filename # 回滚指定文件，回滚所有加点："git reset HEAD . "
-
-    # echo "请输入描述信息" | boxes -d columns -a c
-    echo "请输入描述信息" | pv -qL 20
-    read -p ": " input
-    git commit -m "$input"
-
-
-    git push # 本地remote远程分支名，本地分支名
-
-    git status #查看修改状态
+    \b
+    git
+    keras
+    sklearn
+    pandas or pd
+    tensorflow or tf
+    pytorch or torch
+    """
+    if which == 'git':
+        render_markdown(join(ROOT, 'resources', 'GitTutorials.md'))
+    elif which == 'pandas' or which == 'pd':
+        webbrowser.open('https://pandas.pydata.org/docs/user_guide/')
+    elif which == 'tensorflow' or which == 'tf':
+        webbrowser.open('https://www.tensorflow.org/addons/api_docs/python/')
+    elif which == 'pytorch' or which == 'torch':
+        webbrowser.open('https://pytorch.org/tutorials/')
+    elif which == 'keras':
+        webbrowser.open('https://keras.io/examples/')
+    elif which == 'sklearn':
+        webbrowser.open('https://scikit-learn.org/stable/')
 
 
-    # 把这个目录变成git可以管理的仓库
-    # git init
+@cli.command(short_help='install something useful')
+@click.argument('pkg', nargs=1, required=True)
+def install(pkg):
+    """Examples:
 
-    # git add -A  提交所有变化
-    # git add -u  提交被修改(modified)和被删除(deleted)文件，不包括新文件(new)
-    # git add .  提交新文件(new)和被修改(modified)文件，不包括被删除(deleted)文件
-    # git status
-    # 添加到暂存区里面去
-    # git add -A
-
-
-    # echo "请输入描述信息" | boxes -d columns -a c
-    # echo "请输入描述信息" | pv -qL 20
-    # read -p ": " input
-    # git commit -m "$input"
-    # git pull --rebase origin master
-    # git push origin master
-
-
-
-    # 关联到远程库
-    # git remote add origin git@+服务器地址
-
-    # git clone 指定分支
-    # git clone -b dev_jk http://10.1.1.11/service/tmall-service.git
-
-    # 将最新的修改推送到远程仓库
-    # git push -u origin master     # 这句直接提交不用写什么commit，很方便
-
-    # 获取远程库与本地同步合并
-    # git pull --rebase origin master
-    git pull = git fetch + git merge
-
-    # 查看改动情况
-    # git status
-
-    # 查看在哪个位置
-    # git branch
-
-    # 切换到分支
-    # git checkpoint develop    # develop是分支名称
-
-    # 上传到服务器
-    # git push origin develop   # origin是服务器的名称 develop是分支名称
-
-# git reset:主要用来版本回退
-git reset --hard head~1 # 将head指向上1次的commit。也可以用git reset --hard id 回退到指定版本
-
-# push大文件失败，在将大文件删除之后，其余小文件仍然受到之前大文件push失败的影响，无法正常push。
-# 解决方案：需要将之前含有大文件的commit记录删除（全部删除），使用git reset --hard head~1回退就可以
-
-# 查看日志
-git log --oneline --graph
-
-# git log 命令可以显示所有提交过的版本信息，而git reflog 可以查看所有分支的所有操作记录（包括已经被删除的 commit 记录和 reset 的操作）
-git reflog # 找到删除的id后退出，再执行git reset --hard id回退到删除以前的状态
-
-# 删除cache file
-git rm -r --cached .
-    '''
-    click.echo_via_pager(GIT_TUTORIALS)
-
-
-@cli.command(help='install linux packages through apt-get')
-def aptinstall():
-    FILE = join(ROOT, 'scripts', 'aptinstall.sh')
-    subprocess.run(f'bash {FILE}'.split())
-
-
-@cli.command(help='delete pipenv environment')
-def delete():
-    FILE = join(ROOT, 'scripts', 'delete.sh')
-    subprocess.run(f'bash {FILE}'.split())
-
-
-@cli.command(help='install node')
-def installnode():
-    if sys.platform.startswith('darwin'):
-        subprocess.run(f'brew install node'.split())
-    elif sys.platform.startswith('win'):
-        pass
-    else:
-        # https://developer.aliyun.com/article/760687
-        # 先安装node包管理器nvm
-        subprocess.run(
-            f'wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash'
-            .split())
-        subprocess.run(f'export NVM_DIR="$HOME/.nvm"'.split())
-        subprocess.run(f'nvm --version'.split())
-        # 安装最新版node
-        subprocess.run(f'nvm install node'.split())
+    \b
+            install nodejs:
+                - woc install node
+            install frequently-used linux packages through apt-get:
+                - woc install apt
+    """
+    if pkg == 'node':
+        if sys.platform.startswith('darwin'):
+            subprocess.run(f'brew install node'.split())
+        elif sys.platform.startswith('win'):
+            pass
+        else:
+            # https://developer.aliyun.com/article/760687
+            # 先安装node包管理器nvm
+            subprocess.run(
+                f'wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash'
+                .split())
+            subprocess.run(f'export NVM_DIR="$HOME/.nvm"'.split())
+            subprocess.run(f'nvm --version'.split())
+            # 安装最新版node
+            subprocess.run(f'nvm install node'.split())
+    elif pkg == 'apt':
+        FILE = join(ROOT, 'scripts', 'aptinstall.sh')
+        subprocess.run(f'bash {FILE}'.split())
 
 
 @cli.command(help='config jupyter notebook extension and theme')
@@ -318,13 +221,7 @@ def configjupyter():
     subprocess.run(f'bash {FILE}'.split())
 
 
-@cli.command(help='run install')
-def install():
-    FILE = join(ROOT, 'scripts', 'install.sh')
-    subprocess.run(f'bash {FILE}'.split())
-
-
-@cli.command(help='run publish')
+@cli.command(help='publish present package to pypi')
 def publish():
     FILE = join(ROOT, 'scripts', 'publish.sh')
     subprocess.run(f'bash {FILE}'.split())

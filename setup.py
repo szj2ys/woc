@@ -84,7 +84,7 @@ setup(
     long_description_content_type="text/markdown",
     python_requires=">=3.6.0",
     packages=find_packages(exclude=["examples", "settings"]),
-    package_data={NAME: ["*", "scripts/*.sh"]},
+    package_data={NAME: ["*", "scripts/*.sh", "resources/*.md"]},
     data_files=[("", ["LICENSE"])],
     install_requires=read_requirements("requirements.txt"),
     include_package_data=True,

@@ -7,7 +7,6 @@ DATETIME=`date +%Y-%m-%d:%H:%M:%S`
 # project root abs path
 #PROJECT_DIR=$(dirname $(cd $(dirname "${BASH_SOURCE[0]}") && pwd))
 PROJECT_DIR=`pwd`
-cd ${PROJECT_DIR}
 
 # temporary export project to environment
 export PYTHONPATH=$PYTHONPATH:${PROJECT_DIR}

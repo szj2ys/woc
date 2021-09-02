@@ -6,7 +6,6 @@ deactivate
 
 # project root abs path
 PROJECT_DIR=`pwd`
-cd ${PROJECT_DIR}
 
 ENVNAME=$(basename $PROJECT_DIR)
 echo "Virtual environment [01;31m$ENVNAME[0m will be create"

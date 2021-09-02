@@ -10,7 +10,6 @@ read -p "请输入Python源[pypi:default, aliyun]: " SOURCE
 # project root abs path
 #PROJECT_DIR=$(dirname $(cd $(dirname "${BASH_SOURCE[0]}") && pwd))
 PROJECT_DIR=`pwd`
-cd ${PROJECT_DIR}
 
 # pipenv path
 PIPENV=`pipenv --venv`
