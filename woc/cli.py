@@ -38,7 +38,7 @@ def print_version(ctx, param, value):
                  'clean': 'red',
                  'publish': 'green',
                  'run': 'magenta',
-                 'hexod': 'blue',
+                 'hexo': 'blue',
                  'tree': 'blue',
                  'docs': 'blue',
              })
@@ -69,7 +69,7 @@ def clean():
 
 @cli.command(cls=HelpColorsCommand,
              help_options_color='blue',
-             short_help='pipenv virtual environment pipline')
+             short_help='pipenv virtual environment pipeline')
 @click.option('-c',
               '--create',
               is_flag=True,
@@ -88,7 +88,9 @@ def pipenv(create, delete):
         FILE = join(ROOT, 'scripts', 'delete.sh')
         subprocess.run(f'bash {FILE}'.split())
     else:
-        click.secho('No pipline, please checkout your command...', fg='red')
+        click.secho(
+            "I don't know what you're trying to do. Do you know what you're doing...",
+            fg='red')
 
 
 @cli.command(cls=HelpColorsCommand,
@@ -138,7 +140,7 @@ def pip(pkgs, yes):
 
 @cli.command(cls=HelpColorsCommand,
              help_options_color='blue',
-             short_help='simplified git pipline')
+             short_help='simplified git pipeline')
 @click.argument('do', nargs=1, required=True)
 def git(do):
     """Examples:
@@ -154,14 +156,34 @@ def git(do):
         subprocess.run(f"bash {join(ROOT, 'scripts', 'gitpush.sh')}".split())
     elif do == 'cache' or do == 'c':
         subprocess.run('git rm -r --cache .'.split())
+    else:
+        click.secho(
+            "I don't know what you're trying to do. Do you know what you're doing...",
+            fg='red')
 
 
 @cli.command(cls=HelpColorsCommand,
              help_options_color='blue',
-             help='deploy hexo blog')
-def hexod():
-    FILE = join(ROOT, 'scripts', 'deploy.sh')
-    subprocess.run(f'bash {FILE}'.split())
+             short_help='hexo pipeline')
+@click.option('-d',
+              '--deploy',
+              is_flag=True,
+              default=False,
+              help="deploy hexo blog")
+def hexo(deploy):
+    """Examples:
+
+    \b
+            deploy hexo blog:
+                - woc hexo d | deploy
+    """
+    if deploy:
+        FILE = join(ROOT, 'scripts', 'deploy.sh')
+        subprocess.run(f'bash {FILE}'.split())
+    else:
+        click.secho(
+            "I don't know what you're trying to do. Do you know what you're doing...",
+            fg='red')
 
 
 @cli.command(cls=HelpColorsCommand,
@@ -233,19 +255,35 @@ def install(pkg):
     elif pkg == 'apt':
         FILE = join(ROOT, 'scripts', 'aptinstall.sh')
         subprocess.run(f'bash {FILE}'.split())
+    else:
+        click.secho(
+            "I don't know what you're trying to do. Do you know what you're doing...",
+            fg='red')
 
 
 @cli.command(cls=HelpColorsCommand,
              help_options_color='blue',
-             help='config jupyter notebook extension and theme')
-def configjupyter():
-    FILE = join(ROOT, 'scripts', 'setnotebook.sh')
-    subprocess.run(f'bash {FILE}'.split())
+             short_help='config some environment')
+@click.argument('opt', nargs=1, required=True)
+def config(opt):
+    """Examples:
+
+    \b
+            config jupyter notebook extensions and theme:
+                - woc config jupyter | jp
+    """
+    if opt == 'jupyter' or opt == 'jp':
+        FILE = join(ROOT, 'scripts', 'setnotebook.sh')
+        subprocess.run(f'bash {FILE}'.split())
+    else:
+        click.secho(
+            "I don't know what you're trying to do. Do you know what you're doing...",
+            fg='red')
 
 
 @cli.command(cls=HelpColorsCommand,
              help_options_color='blue',
-             help='publish present package to pypi')
+             help='publish the package to pypi')
 def publish():
     FILE = join(ROOT, 'scripts', 'publish.sh')
     subprocess.run(f'bash {FILE}'.split())
