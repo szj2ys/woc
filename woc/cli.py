@@ -38,9 +38,9 @@ def print_version(ctx, param, value):
                  'clean': 'green',
                  'publish': 'green',
                  'run': 'magenta',
-                 'hexo': ' hexo',
+                 'hexo': 'green',
                  'tree': 'cyan',
-                 'docs': ' docs',
+                 'docs': 'cyan',
              })
 @click.option('-v',
               '--version',
@@ -60,7 +60,7 @@ __    __ ____  ____
 
 
 @cli.command(cls=HelpColorsCommand,
-             help_options_color='green',
+             help_options_color='cyan',
              help='clean useless path and file')
 def clean():
     FILE = join(ROOT, 'scripts', 'clean.sh')
@@ -68,7 +68,7 @@ def clean():
 
 
 @cli.command(cls=HelpColorsCommand,
-             help_options_color='green',
+             help_options_color='cyan',
              short_help='pipenv virtual environment pipeline')
 @click.option('-c',
               '--create',
@@ -94,7 +94,7 @@ def pipenv(create, delete):
 
 
 @cli.command(cls=HelpColorsCommand,
-             help_options_color='green',
+             help_options_color='cyan',
              help='render a beautiful tree with given path')
 @click.argument('path', nargs=-1)
 def tree(path):
@@ -104,7 +104,7 @@ def tree(path):
 
 
 @cli.command(cls=HelpColorsCommand,
-             help_options_color='green',
+             help_options_color='cyan',
              short_help='install python package')
 @click.argument('pkgs', nargs=-1, required=True)
 @click.option('-y',
@@ -139,7 +139,7 @@ def pip(pkgs, yes):
 
 
 @cli.command(cls=HelpColorsCommand,
-             help_options_color='green',
+             help_options_color='cyan',
              short_help='simplified git pipeline')
 @click.argument('do', nargs=1, required=True)
 def git(do):
@@ -163,7 +163,7 @@ def git(do):
 
 
 @cli.command(cls=HelpColorsCommand,
-             help_options_color='green',
+             help_options_color='cyan',
              short_help='hexo pipeline')
 @click.option('-d',
               '--deploy',
@@ -187,14 +187,14 @@ def hexo(deploy):
 
 
 @cli.command(cls=HelpColorsCommand,
-             help_options_color='green',
+             help_options_color='cyan',
              help='print alias')
 def alias():
     render_markdown(join(ROOT, 'resources', 'Alias.md'))
 
 
 @cli.command(cls=HelpColorsCommand,
-             help_options_color='green',
+             help_options_color='cyan',
              short_help='show document')
 @click.argument('which', nargs=1, required=True)
 def docs(which):
@@ -225,7 +225,7 @@ def docs(which):
 
 
 @cli.command(cls=HelpColorsCommand,
-             help_options_color='green',
+             help_options_color='cyan',
              short_help='install something useful')
 @click.argument('pkg', nargs=1, required=True)
 def install(pkg):
@@ -262,7 +262,7 @@ def install(pkg):
 
 
 @cli.command(cls=HelpColorsCommand,
-             help_options_color='green',
+             help_options_color='cyan',
              short_help='config some environment')
 @click.argument('opt', nargs=1, required=True)
 def config(opt):
@@ -282,7 +282,7 @@ def config(opt):
 
 
 @cli.command(cls=HelpColorsCommand,
-             help_options_color='green',
+             help_options_color='cyan',
              help='publish the package to pypi')
 def publish():
     FILE = join(ROOT, 'scripts', 'publish.sh')
@@ -290,7 +290,7 @@ def publish():
 
 
 @cli.command(cls=HelpColorsCommand,
-             help_options_color='green',
+             help_options_color='cyan',
              help='run python script')
 def run():
     FILE = join(ROOT, 'scripts', 'run.sh')
