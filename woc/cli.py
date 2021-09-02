@@ -154,7 +154,7 @@ def git(do):
 
     """
     if do == 'push' or do == 'p':
-        with Console().status("[bold green]Working on tasks...") as status:
+        with Console().status("[bold green]") as status:
             subprocess.run(f"bash"
                            f" {join(ROOT, 'scripts', 'gitpush.sh')}".split())
     elif do == 'cache' or do == 'c':
