@@ -11,7 +11,7 @@ import webbrowser
 
 ROOT = dirname(abspath(__file__))
 import click
-from click_help_colors import HelpColorsGroup
+from click_help_colors import HelpColorsGroup, HelpColorsCommand
 
 
 def print_version(ctx, param, value):
@@ -31,16 +31,16 @@ def print_version(ctx, param, value):
              help_headers_color='yellow',
              help_options_color='magenta',
              help_options_custom_colors={
-                 'up': 'cyan',
-                 'push': 'cyan',
-                 'undo': 'red',
-                 'unstage': 'red',
-                 'revert': 'red',
-                 'diff': 'green',
-                 'branch': 'green',
-                 'add': 'blue',
-                 'commit': 'blue',
-                 'save': 'blue',
+                 'install': 'red',
+                 'pip': 'cyan',
+                 'pipenv': 'red',
+                 'git': 'red',
+                 'clean': 'red',
+                 'publish': 'green',
+                 'run': 'magenta',
+                 'hexod': 'blue',
+                 'tree': 'blue',
+                 'docs': 'blue',
              })
 @click.option('-v',
               '--version',
@@ -59,13 +59,17 @@ __    __ ____  ____
 # http://patorjk.com/software/taag/#p=display&h=0&v=0&f=Graffiti&t=funlp
 
 
-@cli.command(help='clean useless path and file')
+@cli.command(cls=HelpColorsCommand,
+             help_options_color='blue',
+             help='clean useless path and file')
 def clean():
     FILE = join(ROOT, 'scripts', 'clean.sh')
     subprocess.run(f'bash {FILE}'.split())
 
 
-@cli.command(short_help='pipenv virtual environment pipline')
+@cli.command(cls=HelpColorsCommand,
+             help_options_color='blue',
+             short_help='pipenv virtual environment pipline')
 @click.option('-c',
               '--create',
               is_flag=True,
@@ -87,7 +91,9 @@ def pipenv(create, delete):
         click.secho('No pipline, please checkout your command...', fg='red')
 
 
-@cli.command(help='render a beautiful tree with given path')
+@cli.command(cls=HelpColorsCommand,
+             help_options_color='blue',
+             help='render a beautiful tree with given path')
 @click.argument('path', nargs=-1)
 def tree(path):
     FILE = join(ROOT, 'tree.py')
@@ -95,7 +101,9 @@ def tree(path):
     subprocess.run(f'python3 {FILE} {DIR}'.split())
 
 
-@cli.command(short_help='install python package')
+@cli.command(cls=HelpColorsCommand,
+             help_options_color='blue',
+             short_help='install python package')
 @click.argument('pkgs', nargs=-1, required=True)
 @click.option('-y',
               '--yes',
@@ -128,7 +136,9 @@ def pip(pkgs, yes):
                 .split())
 
 
-@cli.command(short_help='simplified git pipline')
+@cli.command(cls=HelpColorsCommand,
+             help_options_color='blue',
+             short_help='simplified git pipline')
 @click.argument('do', nargs=1, required=True)
 def git(do):
     """Examples:
@@ -146,18 +156,24 @@ def git(do):
         subprocess.run('git rm -r --cache .'.split())
 
 
-@cli.command(help='deploy hexo blog')
+@cli.command(cls=HelpColorsCommand,
+             help_options_color='blue',
+             help='deploy hexo blog')
 def hexod():
     FILE = join(ROOT, 'scripts', 'deploy.sh')
     subprocess.run(f'bash {FILE}'.split())
 
 
-@cli.command(help='print alias')
+@cli.command(cls=HelpColorsCommand,
+             help_options_color='blue',
+             help='print alias')
 def alias():
     render_markdown(join(ROOT, 'resources', 'Alias.md'))
 
 
-@cli.command(short_help='show document')
+@cli.command(cls=HelpColorsCommand,
+             help_options_color='blue',
+             short_help='show document')
 @click.argument('which', nargs=1, required=True)
 def docs(which):
     """👀Docs👀
@@ -186,7 +202,9 @@ def docs(which):
         webbrowser.open('www.songzhijun.com')
 
 
-@cli.command(short_help='install something useful')
+@cli.command(cls=HelpColorsCommand,
+             help_options_color='blue',
+             short_help='install something useful')
 @click.argument('pkg', nargs=1, required=True)
 def install(pkg):
     """Examples:
@@ -217,19 +235,25 @@ def install(pkg):
         subprocess.run(f'bash {FILE}'.split())
 
 
-@cli.command(help='config jupyter notebook extension and theme')
+@cli.command(cls=HelpColorsCommand,
+             help_options_color='blue',
+             help='config jupyter notebook extension and theme')
 def configjupyter():
     FILE = join(ROOT, 'scripts', 'setnotebook.sh')
     subprocess.run(f'bash {FILE}'.split())
 
 
-@cli.command(help='publish present package to pypi')
+@cli.command(cls=HelpColorsCommand,
+             help_options_color='blue',
+             help='publish present package to pypi')
 def publish():
     FILE = join(ROOT, 'scripts', 'publish.sh')
     subprocess.run(f'bash {FILE}'.split())
 
 
-@cli.command(help='run python script')
+@cli.command(cls=HelpColorsCommand,
+             help_options_color='blue',
+             help='run python script')
 def run():
     FILE = join(ROOT, 'scripts', 'run.sh')
     subprocess.run(f'bash {FILE}'.split())
