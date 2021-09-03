@@ -112,17 +112,16 @@ def time():
               default=False,
               help="delete pipenv environment base current directory")
 def pipenv(create, delete):
-    with Console().status("[bold green]processing.."):
-        if create:
-            FILE = join(ROOT, 'scripts', 'create.sh')
-            subprocess.run(f'bash {FILE}'.split())
-        elif delete:
-            FILE = join(ROOT, 'scripts', 'delete.sh')
-            subprocess.run(f'bash {FILE}'.split())
-        else:
-            click.secho(
-                "I don't know what you're trying to do. Do you know what you're doing...",
-                fg='red')
+    if create:
+        FILE = join(ROOT, 'scripts', 'create.sh')
+        subprocess.run(f'bash {FILE}'.split())
+    elif delete:
+        FILE = join(ROOT, 'scripts', 'delete.sh')
+        subprocess.run(f'bash {FILE}'.split())
+    else:
+        click.secho(
+            "I don't know what you're trying to do. Do you know what you're doing...",
+            fg='red')
 
 
 @cli.command(cls=HelpColorsCommand,
@@ -159,8 +158,8 @@ def pip(pkgs, yes):
         with open(file, 'r') as f:
             pkgs = [pkg.strip() for pkg in f.readlines()]
 
+    # for pkg in tqdm(pkgs):
     for pkg in track(pkgs, description=''):
-        # for pkg in tqdm(pkgs):
         if yes:
             subprocess.run(f'pip3 install {pkg}'.split())
         else:
@@ -184,12 +183,10 @@ def git(do):
 
     """
     if do == 'push' or do == 'p':
-        with Console().status("[bold green]pushing..."):
-            subprocess.run(f"bash"
-                           f" {join(ROOT, 'scripts', 'gitpush.sh')}".split())
+        subprocess.run(f"bash"
+                       f" {join(ROOT, 'scripts', 'gitpush.sh')}".split())
     elif do == 'cache' or do == 'c':
-        with Console().status("[bold green]cached removing..."):
-            subprocess.run('git rm -r --cache .'.split())
+        subprocess.run('git rm -r --cache .'.split())
     else:
         click.secho(
             "I don't know what you're trying to do. Do you know what you're doing...",
@@ -213,7 +210,7 @@ def hexo(deploy):
     """
     if deploy:
         FILE = join(ROOT, 'scripts', 'deploy.sh')
-        with Console().status("[bold green]deploying..."):
+        with Console().status("[bold green]"):
             subprocess.run(f'bash {FILE}'.split())
     else:
         click.secho(
@@ -326,8 +323,7 @@ def config(opt):
              help='publish the package to pypi')
 def publish():
     FILE = join(ROOT, 'scripts', 'publish.sh')
-    with Console().status("[bold green]publishing..."):
-        subprocess.run(f'bash {FILE}'.split())
+    subprocess.run(f'bash {FILE}'.split())
 
 
 @cli.command(cls=HelpColorsCommand,
@@ -335,8 +331,7 @@ def publish():
              help='run python script')
 def run():
     FILE = join(ROOT, 'scripts', 'run.sh')
-    with Console().status("[bold green]running"):
-        subprocess.run(f'bash {FILE}'.split())
+    subprocess.run(f'bash {FILE}'.split())
 
 
 def execute():

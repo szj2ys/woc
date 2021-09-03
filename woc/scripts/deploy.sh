@@ -7,7 +7,7 @@ hexo clean
 hexo generate
 gulp  # 压缩HTML，必须在生成HTML之后压缩
 
-hexo server # 本地预览
+#hexo server # 本地预览
 hexo deploy  # 部署到Git上
 
 # hexo new "文章题目"  # 创建新文章
