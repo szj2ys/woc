@@ -159,15 +159,14 @@ def pip(pkgs, yes):
         with open(file, 'r') as f:
             pkgs = [pkg.strip() for pkg in f.readlines()]
 
-    with Console().status("[bold green]installing..."):
-        for pkg in track(pkgs):
-            # for pkg in tqdm(pkgs):
-            if yes:
-                subprocess.run(f'pip3 install {pkg}'.split())
-            else:
-                subprocess.run(
-                    f'pip3 install {pkg} -i https://mirrors.aliyun.com/pypi/simple'
-                    .split())
+    for pkg in track(pkgs, description=''):
+        # for pkg in tqdm(pkgs):
+        if yes:
+            subprocess.run(f'pip3 install {pkg}'.split())
+        else:
+            subprocess.run(
+                f'pip3 install {pkg} -i https://mirrors.aliyun.com/pypi/simple'
+                .split())
 
 
 @cli.command(cls=HelpColorsCommand,
