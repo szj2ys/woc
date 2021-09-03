@@ -3,9 +3,14 @@
 import os
 import sys
 import subprocess
+from datetime import datetime
+from time import sleep
 from tqdm import tqdm
 from rich.progress import track
 from rich.console import Console
+from rich.layout import Layout
+from rich.live import Live
+from rich.text import Text
 from os.path import dirname, abspath, join
 from woc.utils import render_markdown
 import webbrowser
@@ -42,6 +47,7 @@ def print_version(ctx, param, value):
                  'hexo': 'green',
                  'tree': 'cyan',
                  'docs': 'cyan',
+                 'time': 'red',
              })
 @click.option('-v',
               '--version',
@@ -65,7 +71,31 @@ __    __ ____  ____
              help='clean useless path and file')
 def clean():
     FILE = join(ROOT, 'scripts', 'clean.sh')
-    subprocess.run(f'bash {FILE}'.split())
+    with Console().status("[bold green]cleaning..."):
+        subprocess.run(f'bash {FILE}'.split())
+
+
+@cli.command(cls=HelpColorsCommand,
+             help_options_color='cyan',
+             help='print time')
+def time():
+    layout = Layout()
+
+    class Clock:
+        """Renders the time in the center of the screen."""
+        def __rich__(self) -> Text:
+            return Text(datetime.now().ctime(),
+                        style="bold magenta",
+                        justify="center")
+
+    layout.update(Clock())
+
+    with Live(layout, screen=True, redirect_stderr=False) as live:
+        try:
+            while True:
+                sleep(1)
+        except KeyboardInterrupt:
+            pass
 
 
 @cli.command(cls=HelpColorsCommand,
@@ -82,16 +112,17 @@ def clean():
               default=False,
               help="delete pipenv environment base current directory")
 def pipenv(create, delete):
-    if create:
-        FILE = join(ROOT, 'scripts', 'create.sh')
-        subprocess.run(f'bash {FILE}'.split())
-    elif delete:
-        FILE = join(ROOT, 'scripts', 'delete.sh')
-        subprocess.run(f'bash {FILE}'.split())
-    else:
-        click.secho(
-            "I don't know what you're trying to do. Do you know what you're doing...",
-            fg='red')
+    with Console().status("[bold green]processing.."):
+        if create:
+            FILE = join(ROOT, 'scripts', 'create.sh')
+            subprocess.run(f'bash {FILE}'.split())
+        elif delete:
+            FILE = join(ROOT, 'scripts', 'delete.sh')
+            subprocess.run(f'bash {FILE}'.split())
+        else:
+            click.secho(
+                "I don't know what you're trying to do. Do you know what you're doing...",
+                fg='red')
 
 
 @cli.command(cls=HelpColorsCommand,
@@ -123,20 +154,20 @@ def pip(pkgs, yes):
             install requirements.txt:
                 - woc pip requirements.txt
     """
-
     if pkgs[0] in ['requirements.txt', 'requirements-dev.txt']:
         file = pkgs[0]
         with open(file, 'r') as f:
             pkgs = [pkg.strip() for pkg in f.readlines()]
 
-    for pkg in track(pkgs):
-        # for pkg in tqdm(pkgs):
-        if yes:
-            subprocess.run(f'pip3 install {pkg}'.split())
-        else:
-            subprocess.run(
-                f'pip3 install {pkg} -i https://mirrors.aliyun.com/pypi/simple'
-                .split())
+    with Console().status("[bold green]installing..."):
+        for pkg in track(pkgs):
+            # for pkg in tqdm(pkgs):
+            if yes:
+                subprocess.run(f'pip3 install {pkg}'.split())
+            else:
+                subprocess.run(
+                    f'pip3 install {pkg} -i https://mirrors.aliyun.com/pypi/simple'
+                    .split())
 
 
 @cli.command(cls=HelpColorsCommand,
@@ -154,11 +185,12 @@ def git(do):
 
     """
     if do == 'push' or do == 'p':
-        with Console().status("[bold green]"):
+        with Console().status("[bold green]pushing..."):
             subprocess.run(f"bash"
                            f" {join(ROOT, 'scripts', 'gitpush.sh')}".split())
     elif do == 'cache' or do == 'c':
-        subprocess.run('git rm -r --cache .'.split())
+        with Console().status("[bold green]cached removing..."):
+            subprocess.run('git rm -r --cache .'.split())
     else:
         click.secho(
             "I don't know what you're trying to do. Do you know what you're doing...",
@@ -182,7 +214,8 @@ def hexo(deploy):
     """
     if deploy:
         FILE = join(ROOT, 'scripts', 'deploy.sh')
-        subprocess.run(f'bash {FILE}'.split())
+        with Console().status("[bold green]deploying..."):
+            subprocess.run(f'bash {FILE}'.split())
     else:
         click.secho(
             "I don't know what you're trying to do. Do you know what you're doing...",
@@ -242,22 +275,26 @@ def install(pkg):
     """
     if pkg == 'node':
         if sys.platform.startswith('darwin'):
-            subprocess.run(f'brew install node'.split())
+            with Console().status("[bold green]"):
+                subprocess.run(f'brew install node'.split())
         elif sys.platform.startswith('win'):
             pass
         else:
             # https://developer.aliyun.com/article/760687
             # 先安装node包管理器nvm
-            subprocess.run(
-                f'wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash'
-                .split())
-            subprocess.run(f'export NVM_DIR="$HOME/.nvm"'.split())
+            with Console().status("[bold green]install nvm..."):
+                subprocess.run(
+                    f'wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash'
+                    .split())
+                subprocess.run(f'export NVM_DIR="$HOME/.nvm"'.split())
             subprocess.run(f'nvm --version'.split())
             # 安装最新版node
-            subprocess.run(f'nvm install node'.split())
+            with Console().status("[bold green]install node..."):
+                subprocess.run(f'nvm install node'.split())
     elif pkg == 'apt':
         FILE = join(ROOT, 'scripts', 'aptinstall.sh')
-        subprocess.run(f'bash {FILE}'.split())
+        with Console().status("[bold green]installing..."):
+            subprocess.run(f'bash {FILE}'.split())
     else:
         click.secho(
             "I don't know what you're trying to do. Do you know what you're doing...",
@@ -277,7 +314,8 @@ def config(opt):
     """
     if opt == 'jupyter' or opt == 'jp':
         FILE = join(ROOT, 'scripts', 'setnotebook.sh')
-        subprocess.run(f'bash {FILE}'.split())
+        with Console().status("[bold green]configing jupyter..."):
+            subprocess.run(f'bash {FILE}'.split())
     else:
         click.secho(
             "I don't know what you're trying to do. Do you know what you're doing...",
@@ -289,7 +327,8 @@ def config(opt):
              help='publish the package to pypi')
 def publish():
     FILE = join(ROOT, 'scripts', 'publish.sh')
-    subprocess.run(f'bash {FILE}'.split())
+    with Console().status("[bold green]publishing..."):
+        subprocess.run(f'bash {FILE}'.split())
 
 
 @cli.command(cls=HelpColorsCommand,
@@ -297,7 +336,8 @@ def publish():
              help='run python script')
 def run():
     FILE = join(ROOT, 'scripts', 'run.sh')
-    subprocess.run(f'bash {FILE}'.split())
+    with Console().status("[bold green]running"):
+        subprocess.run(f'bash {FILE}'.split())
 
 
 def execute():
