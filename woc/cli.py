@@ -242,6 +242,8 @@ def docs(which):
     """
     if which == 'git':
         render_markdown(join(ROOT, 'resources', 'GitTutorials.md'))
+    elif which == 'md' or which == 'markdown':
+        webbrowser.open('https://www.songzhijun.com/posts/89757140/')
     elif which == 'pandas' or which == 'pd':
         webbrowser.open('https://pandas.pydata.org/docs/user_guide/')
     elif which == 'tensorflow' or which == 'tf':
