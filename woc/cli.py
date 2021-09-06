@@ -239,6 +239,7 @@ def docs(which):
     pandas or pd
     tensorflow or tf
     pytorch or torch
+    markdown or md
     """
     if which == 'git':
         render_markdown(join(ROOT, 'resources', 'GitTutorials.md'))
@@ -270,6 +271,8 @@ def install(pkg):
                 - woc install node
             install frequently-used linux packages through apt-get:
                 - woc install apt
+            install brew:
+                - woc install brew
     """
     if pkg == 'node':
         if sys.platform.startswith('darwin'):
@@ -289,6 +292,10 @@ def install(pkg):
             # 安装最新版node
             with Console().status("[bold green]install node..."):
                 subprocess.run(f'nvm install node'.split())
+    elif pkg == 'brew':
+        subprocess.run(
+            '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+        )
     elif pkg == 'apt':
         FILE = join(ROOT, 'scripts', 'aptinstall.sh')
         with Console().status("[bold green]installing..."):
