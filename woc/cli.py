@@ -228,7 +228,7 @@ def alias():
 @cli.command(cls=HelpColorsCommand,
              help_options_color='cyan',
              short_help='show document')
-@click.argument('which', nargs=1, required=True)
+@click.argument('which', nargs=1, required=False)
 def docs(which):
     """👀Docs👀
 
@@ -256,7 +256,7 @@ def docs(which):
     elif which == 'sklearn':
         webbrowser.open('https://scikit-learn.org/stable/')
     else:
-        webbrowser.open('www.songzhijun.com')
+        webbrowser.open('https://www.songzhijun.com')
 
 
 @cli.command(cls=HelpColorsCommand,
