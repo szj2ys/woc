@@ -233,13 +233,13 @@ def docs(which):
     """👀Docs👀
 
     \b
-        git
-        keras
-        sklearn
-        pandas or pd
-        tensorflow or tf
-        pytorch or torch
-        markdown or md
+        - git
+        - keras
+        - sklearn
+        - pandas or pd
+        - tensorflow or tf
+        - pytorch or torch
+        - markdown or md
     """
     if which == 'git':
         render_markdown(join(ROOT, 'resources', 'GitTutorials.md'))
