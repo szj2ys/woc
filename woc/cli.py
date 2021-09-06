@@ -183,8 +183,7 @@ def git(do):
 
     """
     if do == 'push' or do == 'p':
-        subprocess.run(f"bash"
-                       f"{join(ROOT, 'scripts', 'gitpush.sh')}".split())
+        subprocess.run(f"bash {join(ROOT, 'scripts', 'gitpush.sh')}".split())
     elif do == 'cache' or do == 'c':
         subprocess.run('git rm -r --cache .'.split())
     else:
@@ -233,13 +232,13 @@ def docs(which):
     """👀Docs👀
 
     \b
-    git
-    keras
-    sklearn
-    pandas or pd
-    tensorflow or tf
-    pytorch or torch
-    markdown or md
+        git
+        keras
+        sklearn
+        pandas or pd
+        tensorflow or tf
+        pytorch or torch
+        markdown or md
     """
     if which == 'git':
         render_markdown(join(ROOT, 'resources', 'GitTutorials.md'))
@@ -264,15 +263,10 @@ def docs(which):
              short_help='install something useful')
 @click.argument('pkg', nargs=1, required=True)
 def install(pkg):
-    """Examples:
+    """Supports:
 
     \b
-            install nodejs:
-                - woc install node
-            install frequently-used linux packages through apt-get:
-                - woc install apt
-            install brew:
-                - woc install brew
+            node | apt | brew
     """
     if pkg == 'node':
         if sys.platform.startswith('darwin'):
@@ -293,9 +287,10 @@ def install(pkg):
             with Console().status("[bold green]install node..."):
                 subprocess.run(f'nvm install node'.split())
     elif pkg == 'brew':
-        subprocess.run(
-            '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
-        )
+        os.system(
+            '/bin/bash -c "$(curl -fsSL '
+            'https://raw.githubusercontent.com/Homebrew/install/HEAD/install'
+            '.sh)"')
     elif pkg == 'apt':
         FILE = join(ROOT, 'scripts', 'aptinstall.sh')
         with Console().status("[bold green]installing..."):
