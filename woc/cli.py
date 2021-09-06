@@ -41,8 +41,7 @@ def print_version(ctx, param, value):
                  'pip': 'cyan',
                  'pipenv': 'red',
                  'git': 'red',
-                 'clean': 'green',
-                 'publish': 'green',
+                 'pypi': 'green',
                  'run': 'magenta',
                  'hexo': 'green',
                  'tree': 'cyan',
@@ -66,18 +65,6 @@ __    __ ____  ____
 # http://patorjk.com/software/taag/#p=display&h=0&v=0&f=Graffiti&t=funlp
 
 
-@cli.command(cls=HelpColorsCommand,
-             help_options_color='cyan',
-             help='clean useless path and file')
-def clean():
-    FILE = join(ROOT, 'scripts', 'clean.sh')
-    with Console().status("[bold green]cleaning..."):
-        subprocess.run(f'bash {FILE}'.split())
-
-
-@cli.command(cls=HelpColorsCommand,
-             help_options_color='cyan',
-             help='print time')
 def time():
     layout = Layout()
 
@@ -128,6 +115,7 @@ def pipenv(do):
              help='render a beautiful tree with given path')
 @click.argument('path', nargs=-1)
 def tree(path):
+    '''render a beautiful tree with given path'''
     FILE = join(ROOT, 'tree.py')
     DIR = path[0] if path else os.getcwd()
     subprocess.run(f'python3 {FILE} {DIR}'.split())
@@ -218,9 +206,6 @@ def hexo(do):
             fg='red')
 
 
-@cli.command(cls=HelpColorsCommand,
-             help_options_color='cyan',
-             help='print alias')
 def alias():
     render_markdown(join(ROOT, 'resources', 'Alias.md'))
 
@@ -304,19 +289,21 @@ def install(pkg):
 
 @cli.command(cls=HelpColorsCommand,
              help_options_color='cyan',
-             short_help='config some environment')
+             short_help='toolkits...')
 @click.argument('opt', nargs=1, required=True)
-def config(opt):
+def kit(opt):
     """Examples:
 
     \b
-            config jupyter notebook extensions and theme:
-                - woc config jupyter | jp
+            checkout ip address:
+                - woc kit ip
+            print time:
+                - woc kit time
     """
-    if opt in ['jp', 'jupyter']:
-        FILE = join(ROOT, 'scripts', 'setnotebook.sh')
-        with Console().status("[bold green]configing jupyter..."):
-            subprocess.run(f'bash {FILE}'.split())
+    if opt == 'ip':
+        os.system('ifconfig | grep "inet " | grep -v 127.0.0.1')
+    elif opt == 'time':
+        time()
     else:
         click.secho(
             "I don't know what you're trying to do. Do you know what you're doing...",
@@ -325,10 +312,52 @@ def config(opt):
 
 @cli.command(cls=HelpColorsCommand,
              help_options_color='cyan',
-             help='publish the package to pypi')
-def publish():
-    FILE = join(ROOT, 'scripts', 'publish.sh')
-    subprocess.run(f'bash {FILE}'.split())
+             short_help='config some environment')
+@click.argument('opt', nargs=1, required=True)
+def config(opt):
+    """Examples:
+
+    \b
+            config jupyter notebook extensions and theme:
+                - woc config jupyter | jp
+            print frequent used alias:
+                - woc config alias
+    """
+    if opt in ['jp', 'jupyter']:
+        FILE = join(ROOT, 'scripts', 'setnotebook.sh')
+        with Console().status("[bold green]configing jupyter..."):
+            subprocess.run(f'bash {FILE}'.split())
+    elif opt == 'alias':
+        alias()
+    else:
+        click.secho(
+            "I don't know what you're trying to do. Do you know what you're doing...",
+            fg='red')
+
+
+@cli.command(cls=HelpColorsCommand,
+             help_options_color='cyan',
+             short_help='manage pypi package')
+@click.argument('do', nargs=1, required=True)
+def pypi(do):
+    """Examples:
+
+    \b
+            publish package to pypi:
+                - woc pypi p | publish
+            clean pypi build output:
+                - woc pypi c | clean
+    """
+    if do in ['p', 'publish']:
+        FILE = join(ROOT, 'scripts', 'publish.sh')
+        subprocess.run(f'bash {FILE}'.split())
+    elif do in ['c', 'clean']:
+        FILE = join(ROOT, 'scripts', 'clean.sh')
+        subprocess.run(f'bash {FILE}'.split())
+    else:
+        click.secho(
+            "I don't know what you're trying to do. Do you know what you're doing...",
+            fg='red')
 
 
 @cli.command(cls=HelpColorsCommand,
