@@ -184,7 +184,7 @@ def git(do):
     """
     if do == 'push' or do == 'p':
         subprocess.run(f"bash"
-                       f" {join(ROOT, 'scripts', 'gitpush.sh')}".split())
+                       f"{join(ROOT, 'scripts', 'gitpush.sh')}".split())
     elif do == 'cache' or do == 'c':
         subprocess.run('git rm -r --cache .'.split())
     else:
