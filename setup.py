@@ -1,3 +1,4 @@
+import warnings
 from os.path import join, isfile
 from os import walk
 import io
@@ -7,7 +8,8 @@ from shutil import rmtree
 from setuptools import find_packages, setup, Command
 
 if sys.platform.startswith('win'):
-    sys.exit('Ops, this package is only work on linux system...')
+    Attention = ('Attention, some woc commands might not work on Windows...')
+    warnings.warn(Attention)
 
 
 def read_file(filename):
