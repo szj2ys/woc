@@ -101,21 +101,20 @@ def time():
 @cli.command(cls=HelpColorsCommand,
              help_options_color='cyan',
              short_help='pipenv virtual environment pipeline')
-@click.option('-c',
-              '--create',
-              is_flag=True,
-              default=False,
-              help="create pipenv environment base current directory")
-@click.option('-d',
-              '--delete',
-              is_flag=True,
-              default=False,
-              help="delete pipenv environment base current directory")
-def pipenv(create, delete):
-    if create:
+@click.argument('do', nargs=1, required=True)
+def pipenv(do):
+    """Examples:
+
+        \b
+                create pipenv environment base current directory:
+                    - woc pipenv c | create
+                delete pipenv environment base current directory:
+                    - woc pipenv d | delete
+        """
+    if do in ['c', 'create']:
         FILE = join(ROOT, 'scripts', 'create.sh')
         subprocess.run(f'bash {FILE}'.split())
-    elif delete:
+    elif do in ['d', 'delete']:
         FILE = join(ROOT, 'scripts', 'delete.sh')
         subprocess.run(f'bash {FILE}'.split())
     else:
@@ -182,10 +181,10 @@ def git(do):
                 - woc git c | cache
 
     """
-    if do == 'push' or do == 'p':
+    if do in ['p', 'push']:
         FILE = join(ROOT, 'scripts', 'gitpush.sh')
         subprocess.run(f'bash {FILE}'.split())
-    elif do == 'cache' or do == 'c':
+    elif do in ['c', 'cache']:
         subprocess.run('git rm -r --cache .'.split())
     else:
         click.secho(
@@ -196,19 +195,20 @@ def git(do):
 @cli.command(cls=HelpColorsCommand,
              help_options_color='cyan',
              short_help='hexo pipeline')
-@click.option('-d',
-              '--deploy',
-              is_flag=True,
-              default=False,
-              help="deploy hexo blog")
-def hexo(deploy):
+@click.argument('do', nargs=1, required=True)
+# @click.option('-d',
+#               '--deploy',
+#               is_flag=True,
+#               default=False,
+#               help="deploy hexo blog")
+def hexo(do):
     """Examples:
 
     \b
             deploy hexo blog:
                 - woc hexo d | deploy
     """
-    if deploy:
+    if do in ['d', 'deploy']:
         FILE = join(ROOT, 'scripts', 'deploy.sh')
         with Console().status("[bold green]"):
             subprocess.run(f'bash {FILE}'.split())
@@ -243,13 +243,13 @@ def docs(which):
     """
     if which == 'git':
         render_markdown(join(ROOT, 'resources', 'GitTutorials.md'))
-    elif which == 'md' or which == 'markdown':
+    elif which in ['md', 'markdown']:
         webbrowser.open('https://www.songzhijun.com/posts/89757140/')
-    elif which == 'pandas' or which == 'pd':
+    elif which in ['pd', 'pandas']:
         webbrowser.open('https://pandas.pydata.org/docs/user_guide/')
-    elif which == 'tensorflow' or which == 'tf':
+    elif which in ['tf', 'tensorflow']:
         webbrowser.open('https://www.tensorflow.org/addons/api_docs/python/')
-    elif which == 'pytorch' or which == 'torch':
+    elif which in ['torch', 'pytorch']:
         webbrowser.open('https://pytorch.org/tutorials/')
     elif which == 'keras':
         webbrowser.open('https://keras.io/examples/')
@@ -313,7 +313,7 @@ def config(opt):
             config jupyter notebook extensions and theme:
                 - woc config jupyter | jp
     """
-    if opt == 'jupyter' or opt == 'jp':
+    if opt in ['jp', 'jupyter']:
         FILE = join(ROOT, 'scripts', 'setnotebook.sh')
         with Console().status("[bold green]configing jupyter..."):
             subprocess.run(f'bash {FILE}'.split())
