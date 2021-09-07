@@ -46,7 +46,7 @@ Haha, `woc` is now on your environment, having fun with it, enjoy ...
 
 Let's figure out what I can do...
 ```shell
-woc --help
+woc -h
 ```
 Sometimes it is useful to be allowed to invoke more than one subcommand in one go.
 For instance:

@@ -91,7 +91,8 @@ def time():
             pass
 
 
-@cli.command(cls=HelpColorsCommand,
+@cli.command(context_settings=dict(ignore_unknown_options=True, ),
+             cls=HelpColorsCommand,
              help_options_color='cyan',
              short_help='pipenv virtual environment pipeline')
 @click.argument('do', nargs=1, required=True)
@@ -127,7 +128,8 @@ def tree(path):
     subprocess.run(f'python3 {FILE} {DIR}'.split())
 
 
-@cli.command(cls=HelpColorsCommand,
+@cli.command(context_settings=dict(ignore_unknown_options=True, ),
+             cls=HelpColorsCommand,
              help_options_color='cyan',
              short_help='install python package')
 @click.argument('pkgs', nargs=-1, required=True)
@@ -136,7 +138,12 @@ def tree(path):
               is_flag=True,
               show_default=True,
               help="whether to use pypi official source")
-def pip(pkgs, yes):
+@click.option('-u',
+              '--upgrade',
+              is_flag=True,
+              show_default=True,
+              help="upgrade pip")
+def pip(pkgs, yes, upgrade):
     """Examples:
 
     \b
@@ -145,11 +152,22 @@ def pip(pkgs, yes):
             install requirements.txt:
                 - woc pip requirements.txt
     """
+    args = sys.argv
+
+    if set(args).intersection(['-yu', '-uy']):
+        yes = upgrade = True
+
+    if upgrade:
+        subprocess.run('pip install --upgrade pip'.split())
+
     if pkgs[0] in ['requirements.txt', 'requirements-dev.txt']:
         file = pkgs[0]
         with open(file, 'r') as f:
             pkgs = [pkg.strip() for pkg in f.readlines()]
-    pkgs = [pkg for pkg in pkgs if pkg not in ['-y', '--yes']]
+    pkgs = [
+        pkg for pkg in pkgs
+        if pkg not in ['-y', '--yes', '-u', '--upgrade', '-yu', '-uy']
+    ]
     # for pkg in tqdm(pkgs):
     for pkg in track(pkgs, description=''):
         if yes:
@@ -164,8 +182,8 @@ def pip(pkgs, yes):
 @cli.command(cls=HelpColorsCommand,
              help_options_color='cyan',
              short_help='simplified git pipeline')
-@click.argument('do', nargs=1, required=True)
-def git(do):
+@click.argument('args', nargs=-1, required=True)
+def git(args):
     """Examples:
 
     \b
@@ -177,13 +195,15 @@ def git(do):
                 - woc git l | lock
 
     """
-    if do in ['p', 'push']:
+    args = sys.argv
+
+    if set(args).intersection(['p', 'push', '-p', '--push']):
         FILE = join(ROOT, 'scripts', 'gitpush.sh')
         subprocess.run(f'bash {FILE}'.split())
-    elif do in ['l', 'lock']:
+    elif set(args).intersection(['l', 'lock', '-l', '--lock']):
         # fix bug: fatal: Unable to create 'xxx/.git/index.lock': File exists.
         subprocess.run('rm -f ./.git/index.lock'.split())
-    elif do in ['c', 'cache']:
+    elif set(args).intersection(['c', 'cache', '-c', '--cache']):
         subprocess.run('git rm -r --cache .'.split())
     else:
         click.secho(
@@ -358,13 +378,18 @@ def pypi(args):
                 - woc pypi p | publish
             clean pypi build output:
                 - woc pypi c | clean
+            combine activity chain:
+                - woc pypi -pc
     """
     args = sys.argv
+    CHAIN = False
+    if set(args).intersection(['-pc', '-cp']):
+        CHAIN = True
 
-    if set(args).intersection(['p', 'publish']):
+    if set(args).intersection(['p', 'publish', '-p', '--publish']) or CHAIN:
         FILE = join(ROOT, 'scripts', 'publish.sh')
         subprocess.run(f'bash {FILE}'.split())
-    elif set(args).intersection(['c', 'clean']):
+    elif set(args).intersection(['c', 'clean', '-c', '--clean']) or CHAIN:
         FILE = join(ROOT, 'scripts', 'clean.sh')
         subprocess.run(f'bash {FILE}'.split())
     else:
