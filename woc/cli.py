@@ -151,6 +151,8 @@ def pip(pkgs, yes, upgrade):
                 - woc pip fire just scrapy -y
             install requirements.txt:
                 - woc pip requirements.txt
+            install package and upgrade pip:
+                - woc pip fire -u | -yu
     """
     args = sys.argv
 
