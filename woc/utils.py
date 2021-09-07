@@ -1,18 +1,13 @@
 # *_*coding:utf-8 *_*
 from __future__ import absolute_import, division, print_function
-from os.path import dirname, abspath, join
-
-# ROOT = dirname(dirname(abspath(__file__)))
 from datetime import timedelta, datetime
 import pandas as pd
-import numpy as np
-from tqdm import tqdm
 import warnings
 from doger import guru
 from rich.console import Console
 from rich.markdown import Markdown
 
-loger = guru(level='DEBUG', name=__file__)
+loger = guru(level='INFO', name=__file__)
 warnings.filterwarnings('ignore')
 warnings.simplefilter('ignore')
 pd.set_option("display.max_columns", None)
