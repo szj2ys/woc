@@ -172,11 +172,16 @@ def git(do):
                 - woc git p | push
             remove all cached files from staging area:
                 - woc git c | cache
+            fix bug: fatal: Unable to create 'xxx/.git/index.lock':
+                - woc git l | lock
 
     """
     if do in ['p', 'push']:
         FILE = join(ROOT, 'scripts', 'gitpush.sh')
         subprocess.run(f'bash {FILE}'.split())
+    elif do in ['l', 'lock']:
+        # fix bug: fatal: Unable to create 'xxx/.git/index.lock': File exists.
+        subprocess.run('rm -f ./.git/index.lock'.split())
     elif do in ['c', 'cache']:
         subprocess.run('git rm -r --cache .'.split())
     else:
