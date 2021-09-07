@@ -51,7 +51,7 @@ woc --help
 Sometimes it is useful to be allowed to invoke more than one subcommand in one go.
 For instance:
 ```shell
-woc publish clean
+woc pypi publish clean
 ```
 
 

@@ -19,6 +19,10 @@ ROOT = dirname(abspath(__file__))
 import click
 from click_help_colors import HelpColorsGroup, HelpColorsCommand
 
+# CONSTANTS
+CLICK_CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+CLICK_CONTEXT_SETTINGS_NO_HELP = dict(help_option_names=[])
+
 
 def print_version(ctx, param, value):
     if not value or ctx.resilient_parsing:
@@ -34,6 +38,7 @@ def print_version(ctx, param, value):
 # http://patorjk.com/software/taag/#p=display&f=Graffiti&t=hello
 @click.group(chain=True,
              cls=HelpColorsGroup,
+             context_settings=CLICK_CONTEXT_SETTINGS,
              help_headers_color='yellow',
              help_options_color='magenta',
              help_options_custom_colors={
@@ -46,7 +51,7 @@ def print_version(ctx, param, value):
                  'hexo': 'green',
                  'tree': 'cyan',
                  'docs': 'cyan',
-                 'time': 'red',
+                 'kit': 'magenta',
              })
 @click.option('-v',
               '--version',
@@ -128,7 +133,6 @@ def tree(path):
 @click.option('-y',
               '--yes',
               is_flag=True,
-              default=False,
               show_default=True,
               help="whether to use pypi official source")
 def pip(pkgs, yes):
@@ -144,11 +148,12 @@ def pip(pkgs, yes):
         file = pkgs[0]
         with open(file, 'r') as f:
             pkgs = [pkg.strip() for pkg in f.readlines()]
-
+    pkgs = [pkg for pkg in pkgs if pkg not in ['-y', '--yes']]
     # for pkg in tqdm(pkgs):
     for pkg in track(pkgs, description=''):
         if yes:
-            subprocess.run(f'pip3 install {pkg}'.split())
+            subprocess.run(
+                f'pip3 install {pkg} -i https://pypi.org/simple'.split())
         else:
             subprocess.run(
                 f'pip3 install {pkg} -i https://mirrors.aliyun.com/pypi/simple'
@@ -338,8 +343,8 @@ def config(opt):
 @cli.command(cls=HelpColorsCommand,
              help_options_color='cyan',
              short_help='manage pypi package')
-@click.argument('do', nargs=1, required=True)
-def pypi(do):
+@click.argument('args', nargs=-1, required=True)
+def pypi(args):
     """Examples:
 
     \b
@@ -348,10 +353,12 @@ def pypi(do):
             clean pypi build output:
                 - woc pypi c | clean
     """
-    if do in ['p', 'publish']:
+    args = sys.argv
+
+    if set(args).intersection(['p', 'publish']):
         FILE = join(ROOT, 'scripts', 'publish.sh')
         subprocess.run(f'bash {FILE}'.split())
-    elif do in ['c', 'clean']:
+    elif set(args).intersection(['c', 'clean']):
         FILE = join(ROOT, 'scripts', 'clean.sh')
         subprocess.run(f'bash {FILE}'.split())
     else:
