@@ -332,11 +332,15 @@ def kit(opt):
                 - woc kit ip
             print time:
                 - woc kit time
+            server directory:
+                - woc kit server
     """
     if opt == 'ip':
         os.system('ifconfig | grep "inet " | grep -v 127.0.0.1')
     elif opt == 'time':
         time()
+    elif opt == 'server':
+        os.system('python3 -m http.server --directory ./')
     else:
         click.secho(
             "I don't know what you're trying to do. Do you know what you're doing...",
