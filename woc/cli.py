@@ -58,7 +58,8 @@ def print_version(ctx, param, value):
               is_flag=True,
               callback=print_version,
               expose_value=False,
-              is_eager=True)
+              is_eager=True,
+              help='Show version')
 def cli():
     """\b
 __    __ ____  ____
