@@ -13,7 +13,7 @@ from rich.live import Live
 from rich.text import Text
 from os.path import dirname, abspath, join
 
-from downloader import downloading
+from woc.downloader import downloading
 from woc.utils import render_markdown
 import webbrowser
 
