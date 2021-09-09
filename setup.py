@@ -92,7 +92,7 @@ setup(
     include_package_data=True,
     entry_points={
         "console_scripts": [
-            "woc=woc.cli:execute",
+            "woc=woc.cmdline:execute",
         ],
     },
     license="MIT",  # BSD
