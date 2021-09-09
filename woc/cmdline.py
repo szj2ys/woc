@@ -394,10 +394,15 @@ def pypi(args):
     if set(args).intersection(['-pc', '-cp', 'pc', 'cp']):
         CHAIN = True
 
-    if CHAIN or set(args).intersection(['p', 'publish', '-p', '--publish']):
+    if CHAIN:
         FILE = join(ROOT, 'scripts', 'publish.sh')
         subprocess.run(f'bash {FILE}'.split())
-    elif CHAIN or set(args).intersection(['c', 'clean', '-c', '--clean']):
+        FILE = join(ROOT, 'scripts', 'clean.sh')
+        subprocess.run(f'bash {FILE}'.split())
+    elif set(args).intersection(['p', 'publish', '-p', '--publish']):
+        FILE = join(ROOT, 'scripts', 'publish.sh')
+        subprocess.run(f'bash {FILE}'.split())
+    elif set(args).intersection(['c', 'clean', '-c', '--clean']):
         FILE = join(ROOT, 'scripts', 'clean.sh')
         subprocess.run(f'bash {FILE}'.split())
     else:
