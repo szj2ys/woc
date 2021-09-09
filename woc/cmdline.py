@@ -12,6 +12,8 @@ from rich.layout import Layout
 from rich.live import Live
 from rich.text import Text
 from os.path import dirname, abspath, join
+
+from downloader import downloading
 from woc.utils import render_markdown
 import webbrowser
 
@@ -410,6 +412,19 @@ def pypi(args):
 def run():
     FILE = join(ROOT, 'scripts', 'run.sh')
     subprocess.run(f'bash {FILE}'.split())
+
+
+@cli.command(cls=HelpColorsCommand,
+             help_options_color='cyan',
+             help='download url')
+@click.argument('args', nargs=-1, required=True)
+@click.option('-d',
+              '--dir',
+              default="./",
+              show_default=True,
+              help="upgrade pip")
+def download(args, dir):
+    downloading(args, dir)
 
 
 def execute():
