@@ -67,7 +67,7 @@ def cli():
 __    __ ____  ____
 \ \/\/ // () \/ (__`
  \_/\_/ \____/\____)
-"""
+    """
 
 
 # http://patorjk.com/software/taag/#p=display&h=0&v=0&f=Graffiti&t=funlp
@@ -425,9 +425,10 @@ def run():
 @click.argument('args', nargs=-1, required=True)
 @click.option('-d',
               '--dir',
+              type=click.Path(),
               default="./",
               show_default=True,
-              help="upgrade pip")
+              help="download directory")
 def download(args, dir):
     downloading(args, dir)
 

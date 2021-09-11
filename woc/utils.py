@@ -3,11 +3,10 @@ from __future__ import absolute_import, division, print_function
 from datetime import timedelta, datetime
 import pandas as pd
 import warnings
-from doger import guru
 from rich.console import Console
 from rich.markdown import Markdown
+from woc.utils.decorator import decorator
 
-loger = guru(level='INFO', name=__file__)
 warnings.filterwarnings('ignore')
 warnings.simplefilter('ignore')
 pd.set_option("display.max_columns", None)
@@ -22,7 +21,27 @@ def render_markdown(file):
     console.print(markdown)
 
 
-if __name__ == "__main__":
-    starttime = (datetime.now() +
-                 timedelta(days=-1)).strftime("%Y-%m-%d %H:%M:%S")
-    str2date = datetime.strptime("2019-03-17 11:00:00", "%Y-%m-%d %H:%M:%S")
+@decorator
+def deprecated(func, *args, **kwargs):
+    """ Marks a function as deprecated. """
+    warnings.warn(
+        f"{func} is deprecated and should no longer be used.",
+        DeprecationWarning,
+        stacklevel=3,
+    )
+    return func(*args, **kwargs)
+
+
+def deprecated_option(option_name, message=""):
+    """ Marks an option as deprecated. """
+    def caller(func, *args, **kwargs):
+        if option_name in kwargs:
+            warnings.warn(
+                f"{option_name} is deprecated. {message}",
+                DeprecationWarning,
+                stacklevel=3,
+            )
+
+        return func(*args, **kwargs)
+
+    return decorator(caller)
