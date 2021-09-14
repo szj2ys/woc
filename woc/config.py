@@ -8,7 +8,10 @@ from typing import Callable
 from typing import Dict
 from typing import Optional
 
-from woc.locations import CACHE_DIR
+try:
+    from woc.locations import CACHE_DIR
+except:
+    from locations import CACHE_DIR
 
 from .config_source import ConfigSource
 from .dict_config_source import DictConfigSource

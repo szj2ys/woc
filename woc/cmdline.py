@@ -14,7 +14,12 @@ from rich.text import Text
 from os.path import dirname, abspath, join
 
 from woc.downloader import downloading
-from woc.utils import render_markdown
+try:
+    from woc.math2latex import py2tex
+    from woc.helpers import render_markdown
+except:
+    from .math2latex import py2tex
+    from .helpers import render_markdown
 import webbrowser
 
 ROOT = dirname(abspath(__file__))
@@ -186,28 +191,34 @@ def pip(pkgs, yes, upgrade):
 @cli.command(cls=HelpColorsCommand,
              help_options_color='cyan',
              short_help='simplified git pipeline')
-@click.argument('args', nargs=-1, required=True)
-def git(args):
+@click.option('-p', '--push', is_flag=True, help='push change to remote')
+@click.option('-m', '--msg', help='git commit message')
+@click.option('-c', '--cache', is_flag=True, help='remove cached files')
+@click.option('-l', '--lock', is_flag=True, help='remove index.lock')
+def git(push, msg, cache, lock):
     """Examples:
 
     \b
             push changes to remote git repo:
-                - woc git p | push
+                - woc git -p -m "push changes"
             remove all cached files from staging area:
-                - woc git c | cache
+                - woc git -c | --cache
             fix bug: fatal: Unable to create 'xxx/.git/index.lock':
-                - woc git l | lock
+                - woc git -l | --lock
 
     """
-    args = sys.argv
 
-    if set(args).intersection(['p', 'push', '-p', '--push']):
-        FILE = join(ROOT, 'scripts', 'gitpush.sh')
-        subprocess.run(f'bash {FILE}'.split())
-    elif set(args).intersection(['l', 'lock', '-l', '--lock']):
+    if push:
+        if not msg:
+            # If no massage is given, to use the current time instead
+            msg = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        os.system(f'yapf -irp .;git add . --all;git commit -m "'
+                  f'{msg}";git push')
+
+    elif lock:
         # fix bug: fatal: Unable to create 'xxx/.git/index.lock': File exists.
         subprocess.run('rm -f ./.git/index.lock'.split())
-    elif set(args).intersection(['c', 'cache', '-c', '--cache']):
+    elif cache:
         subprocess.run('git rm -r --cache .'.split())
     else:
         click.secho(
@@ -219,11 +230,6 @@ def git(args):
              help_options_color='cyan',
              short_help='hexo pipeline')
 @click.argument('do', nargs=1, required=True)
-# @click.option('-d',
-#               '--deploy',
-#               is_flag=True,
-#               default=False,
-#               help="deploy hexo blog")
 def hexo(do):
     """Examples:
 
@@ -431,6 +437,17 @@ def run():
               help="download directory")
 def download(args, dir):
     downloading(args, dir)
+
+
+@cli.command(cls=HelpColorsCommand,
+             help_options_color='cyan',
+             short_help='render math expression into latex')
+@click.argument('math', nargs=1, required=True)
+def latex(math):
+    '''render math expression into latex'''
+    latex = py2tex(math)
+    # latex = py2tex('x = 2*sqrt(2*pi*k*T_e/m_e)*(DeltaE/(k*T_e))**2*a_0**2')
+    Console().print(latex, style='green')
 
 
 def execute():

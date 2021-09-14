@@ -7,7 +7,11 @@ import sys
 from shutil import rmtree
 from setuptools import find_packages, setup, Command
 
-if sys.platform.startswith('win'):
+SHELL = os.getenv("SHELL", "")
+WINDOWS = sys.platform.startswith("win") or (sys.platform == "cli"
+                                             and os.name == "nt")
+MACOS = sys.platform == "darwin"
+if WINDOWS:
     Attention = ('Attention, some woc commands might not work on Windows...')
     warnings.warn(Attention)
 

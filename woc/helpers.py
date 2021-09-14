@@ -3,7 +3,15 @@ import re
 import shutil
 import stat
 import tempfile
-
+import warnings
+from rich.console import Console
+from rich.markdown import Markdown
+try:
+    from woc.decorator import decorator
+    from woc.config import Config
+except:
+    from .config import Config
+    from .decorator import decorator
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
@@ -14,8 +22,6 @@ from typing import List
 from typing import Optional
 
 import requests
-
-from woc.config.config import Config
 
 try:
     from collections.abc import Mapping
@@ -120,3 +126,36 @@ def is_dir_writable(path: Path, create: bool = False) -> bool:
         return False
     else:
         return True
+
+
+def render_markdown(file):
+    console = Console()
+    with open(file, 'r') as readme:
+        markdown = Markdown(readme.read())
+    console.print(markdown)
+
+
+@decorator
+def deprecated(func, *args, **kwargs):
+    """ Marks a function as deprecated. """
+    warnings.warn(
+        f"{func} is deprecated and should no longer be used.",
+        DeprecationWarning,
+        stacklevel=3,
+    )
+    return func(*args, **kwargs)
+
+
+def deprecated_option(option_name, message=""):
+    """ Marks an option as deprecated. """
+    def caller(func, *args, **kwargs):
+        if option_name in kwargs:
+            warnings.warn(
+                f"{option_name} is deprecated. {message}",
+                DeprecationWarning,
+                stacklevel=3,
+            )
+
+        return func(*args, **kwargs)
+
+    return decorator(caller)

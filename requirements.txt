@@ -1,9 +1,10 @@
-jupyter
 pipenv
 environs
 tqdm
 rich
 click
+shellingham
+tomlkit
 click_help_colors
 yapf
 autoflake
