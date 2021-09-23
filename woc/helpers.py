@@ -2,8 +2,10 @@ import os
 import re
 import shutil
 import stat
+import sys
 import tempfile
 import warnings
+from os.path import dirname, abspath, join, basename, splitext
 from rich.console import Console
 from rich.markdown import Markdown
 try:
@@ -29,6 +31,29 @@ except ImportError:
     from collections import Mapping
 
 _canonicalize_regex = re.compile("[-_]+")
+
+SHELL = os.getenv("SHELL", "")
+MACOS = sys.platform == "darwin"
+WINDOWS = sys.platform.startswith("win") or (sys.platform == "cli"
+                                             and os.name == "nt")
+
+
+def redirect(show: bool = True):
+    if WINDOWS:
+        return ''
+    elif show:
+        return ''
+    else:
+        return ' >/dev/null 2>&1'
+
+
+def get_pure_filename(fpath: str):
+    """Get pure filename
+
+    :param fpath: woc/woc/woc.txt
+    :return: woc
+    """
+    return splitext(basename(fpath))[0]
 
 
 def canonicalize_name(name: str) -> str:

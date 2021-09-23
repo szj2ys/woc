@@ -99,13 +99,11 @@ setup(
             "woc=woc.cmdline:execute",
         ],
     },
-    license="MIT",  # BSD
+    license="MIT",
     classifiers=[
+        "Environment :: Console",
         "License :: OSI Approved :: MIT License",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3",
     ],
     zip_safe=False,
 )

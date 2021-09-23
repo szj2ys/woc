@@ -1,5 +1,6 @@
 pipenv
-environs
+dynaconf
+pandas
 tqdm
 rich
 click

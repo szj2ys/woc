@@ -4,7 +4,7 @@ png"/>
 </p>
 
 <h3 align="center">
-    <p>An awesome Command client you are waiting for</p>
+    <p>🛠Awesome Command client you are waiting for🛠</p>
 </h3>
 
 
@@ -32,7 +32,7 @@ png"/>
     </a>
 </p>
 
-
+⚙ 🔑 🎛️ 🙈 🎠 ❌ 🎉 
 ## Installation
 ```shell
 pip install woc
@@ -43,7 +43,7 @@ woc -v
 ```
 Haha, `woc` is now on your environment, having fun with it, enjoy ...
 
-## Usage
+## Usage 🤔 💭 🤓 💬 😎
 
 Let's figure out what I can do...
 ```shell
