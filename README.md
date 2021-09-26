@@ -40,7 +40,7 @@ woc -h
 Sometimes it is useful to be allowed to invoke more than one subcommand in one go.
 For instance:
 ```shell
-woc pypi publish clean
+woc pypi -pc
 ```
 
 
