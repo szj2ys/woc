@@ -29,7 +29,7 @@ def read_requirements(filename):
 
 
 NAME = 'woc'
-DESCRIPTION = ("WOC, this is amazing🤣🤣😄😆")
+DESCRIPTION = ("WOC, this tool is amazing🤣🤣😄😆")
 
 here = os.path.abspath(os.path.dirname(__file__))
 

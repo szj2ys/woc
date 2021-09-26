@@ -4,7 +4,7 @@ png"/>
 </p>
 
 <h3 align="center">
-    <p>🛠Awesome Command client you are waiting for🛠</p>
+    <p>🛠Awesome Command toolkit you are waiting for🛠</p>
 </h3>
 
 
