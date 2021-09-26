@@ -28,7 +28,7 @@ alt="License"/>
 ```shell
 pip install woc
 ```
-Haha, `woc` is now on your environment, having fun with it, enjoy ...
+hahahahaha... now,`woc` is on your environment, having fun with it, enjoy ...
 
 if you need help
 ```shell
