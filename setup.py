@@ -100,7 +100,9 @@ setup(
         ],
     },
     license="MIT",
+    # https://pypi.org/classifiers/
     classifiers=[
+        "Development Status :: 1 - Planning",
         "Environment :: Console",
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",

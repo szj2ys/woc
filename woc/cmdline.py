@@ -40,7 +40,6 @@ def print_version(ctx, param, value):
     ctx.exit()
 
 
-# http://patorjk.com/software/taag/#p=display&f=Graffiti&t=hello
 @click.group(chain=True,
              cls=HelpColorsGroup,
              context_settings=CLICK_CONTEXT_SETTINGS,
@@ -161,10 +160,6 @@ def pip(pkgs, pypi, upgrade, show):
     REDIRECT_SEG = redirect(show)
 
     PIP = 'pip3'
-
-    CHECK_PIPENV = os.system('pipenv --venv')
-    if CHECK_PIPENV == 0:
-        PIP = '`pipenv --venv`/bin/pip'
 
     # for pkg in tqdm(pkgs):
     for pkg in track(pkgs, description=''):
