@@ -24,7 +24,7 @@ alt="License"/>
 </p>
 
 
-## Installation🎉 
+## Installation🎉 ⚙ 🔑 🎛️ 🙈 🎠 ❌ 🎉  
 ```shell
 pip install woc
 ```
