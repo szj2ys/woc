@@ -38,13 +38,13 @@ WINDOWS = sys.platform.startswith("win") or (sys.platform == "cli"
                                              and os.name == "nt")
 
 
-def redirect(show: bool = True):
+def redirect(hide: bool = False):
     if WINDOWS:
         return ''
-    elif show:
-        return ''
-    else:
+    elif hide:
         return ' >/dev/null 2>&1'
+    else:
+        return ''
 
 
 def get_pure_filename(fpath: str):
