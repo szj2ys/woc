@@ -236,7 +236,8 @@ def render_alias():
 @click.option('-tf', '--tensorflow', is_flag=True, help="show tensorflow doc")
 @click.option('-tc', '--torch', is_flag=True, help="show pytorch doc")
 @click.option('-md', '--markdown', is_flag=True, help="show markdown doc")
-def docs(markdown, torch, tensorflow, pandas, sklearn, keras):
+@click.option('-py', '--python', is_flag=True, help="show python doc")
+def docs(markdown, torch, tensorflow, pandas, sklearn, keras, python):
     """👀Documents👀"""
     if markdown:
         webbrowser.open('https://www.songzhijun.com/posts/89757140/')
@@ -250,6 +251,8 @@ def docs(markdown, torch, tensorflow, pandas, sklearn, keras):
         webbrowser.open('https://keras.io/examples/')
     if sklearn:
         webbrowser.open('https://scikit-learn.org/stable/')
+    if python:
+        webbrowser.open('https://docs.python.org/3/')
 
     # webbrowser.open('https://www.songzhijun.com')
 
