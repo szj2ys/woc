@@ -141,12 +141,12 @@ def tree(path):
               is_flag=True,
               show_default=True,
               help="upgrade pip")
-@click.option('-s',
-              '--show',
+@click.option('-h',
+              '--hide',
               is_flag=True,
               show_default=True,
-              help="show message on terminal")
-def pip(pkgs, pypi, upgrade, show):
+              help="hide message on terminal")
+def pip(pkgs, pypi, upgrade, hide):
 
     if upgrade:
         subprocess.run('pip install --upgrade pip'.split())
@@ -157,7 +157,7 @@ def pip(pkgs, pypi, upgrade, show):
             pkgs = [pkg.strip() for pkg in f.readlines() if len(pkg) > 0]
     pkgs = [pkg for pkg in pkgs if not str(pkg).__contains__('-')]
 
-    REDIRECT_SEG = redirect(show)
+    REDIRECT_SEG = redirect(hide)
 
     PIP = 'pip3'
 
