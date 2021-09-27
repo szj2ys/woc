@@ -2,7 +2,7 @@
 
 
 # deactivate python virtual environment
-deactivate
+#deactivate
 
 # project root abs path
 PROJECT_DIR=`pwd`

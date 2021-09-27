@@ -1,7 +1,7 @@
 #/bin/bash
 
 # deactivate python virtual environment
-deactivate
+#deactivate
 
 # project root abs path
 #PROJECT_DIR=$(dirname $(cd $(dirname "${BASH_SOURCE[0]}") && pwd))
