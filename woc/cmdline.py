@@ -141,7 +141,7 @@ def tree(path):
               is_flag=True,
               show_default=True,
               help="upgrade pip")
-@click.option('-h',
+@click.option('-hd',
               '--hide',
               is_flag=True,
               show_default=True,
