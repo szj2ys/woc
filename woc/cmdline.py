@@ -237,7 +237,14 @@ def render_alias():
 @click.option('-tc', '--torch', is_flag=True, help="show pytorch doc")
 @click.option('-md', '--markdown', is_flag=True, help="show markdown doc")
 @click.option('-py', '--python', is_flag=True, help="show python doc")
-def docs(markdown, torch, tensorflow, pandas, sklearn, keras, python):
+@click.option('-pl', '--plotly', is_flag=True, help="show plotly doc")
+@click.option('-ple',
+              '--plotly_express',
+              is_flag=True,
+              help="show plotly "
+              "express doc")
+def docs(markdown, torch, tensorflow, pandas, sklearn, keras, python, plotly,
+         plotly_express):
     """👀Documents👀"""
     if markdown:
         webbrowser.open('https://www.songzhijun.com/posts/89757140/')
@@ -253,6 +260,10 @@ def docs(markdown, torch, tensorflow, pandas, sklearn, keras, python):
         webbrowser.open('https://scikit-learn.org/stable/')
     if python:
         webbrowser.open('https://docs.python.org/3/')
+    if plotly:
+        webbrowser.open('https://plotly.com/python/plotly-fundamentals/')
+    if plotly_express:
+        webbrowser.open('https://plotly.com/python/plotly-express/#')
 
     # webbrowser.open('https://www.songzhijun.com')
 
