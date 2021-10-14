@@ -146,7 +146,12 @@ def tree(path):
               is_flag=True,
               show_default=True,
               help="hide message on terminal")
-def pip(pkgs, pypi, upgrade, hide):
+@click.option('-v',
+              '--virtualenv',
+              is_flag=True,
+              show_default=True,
+              help="install package in pipenv virtualenv")
+def pip(pkgs, pypi, upgrade, hide, virtualenv):
 
     if upgrade:
         subprocess.run('pip install --upgrade pip'.split())
@@ -159,7 +164,12 @@ def pip(pkgs, pypi, upgrade, hide):
 
     REDIRECT_SEG = redirect(hide)
 
-    PIP = 'pip3'
+    if virtualenv:
+        # pipenv path
+        PIPENV = subprocess.getoutput('pipenv --venv')
+        PIP = PIPENV + '/bin/pip'
+    else:
+        PIP = 'pip3'
 
     # for pkg in tqdm(pkgs):
     for pkg in track(pkgs, description=''):
@@ -379,12 +389,12 @@ def pypi(publish, clean):
              help_options_color='cyan',
              help='run python script')
 @click.argument('application', nargs=1, required=True)
-@click.option('-d', '--directory', default='logs', help='log directory')
-def run(application, directory):
+@click.option('-d', '--logdir', default='logs', help='log directory')
+def run(application, logdir):
     # pipenv path
     PIPENV = subprocess.getoutput('which pipenv')
     CHECK_PIPENV = os.system('pipenv --venv')
-    LOG_PATH = f'''{directory}/{get_pure_filename(application)}'''
+    LOG_PATH = f'''{logdir}/{get_pure_filename(application)}'''
     LOG_FILE = f'''{LOG_PATH}/{datetime.now().strftime(
         "%Y-%m-%d:%H:%M:%S")}.log'''
     Path(LOG_PATH).mkdir(parents=True, exist_ok=True)
