@@ -141,12 +141,7 @@ def tree(path):
               is_flag=True,
               show_default=True,
               help="use douban pypi source")
-@click.option('-u',
-              '--upgrade',
-              is_flag=True,
-              show_default=True,
-              help="upgrade pip")
-@click.option('-hd',
+@click.option('-H',
               '--hide',
               is_flag=True,
               show_default=True,
@@ -156,10 +151,16 @@ def tree(path):
               is_flag=True,
               show_default=True,
               help="install package in pipenv virtualenv")
+@click.option('-u',
+              '--upgrade',
+              is_flag=True,
+              show_default=True,
+              help="upgrade package")
 def pip(pkgs, ali, douban, upgrade, hide, virtualenv):
-
     if upgrade:
-        subprocess.run('pip install --upgrade pip'.split())
+        UPGRADE = '--upgrade'
+    else:
+        UPGRADE = ''
 
     if pkgs[0] in ['requirements.txt', 'requirements-dev.txt']:
         file = pkgs[0]
@@ -176,19 +177,23 @@ def pip(pkgs, ali, douban, upgrade, hide, virtualenv):
     else:
         PIP = 'pip3'
 
+    # trying to upgrade pip first
+    os.system(
+        f'{PIP} install pip --upgrade -i https://mirrors.aliyun.com/pypi/simple'
+        f' {REDIRECT_SEG}')
+
     # for pkg in tqdm(pkgs):
     for pkg in track(pkgs, description=''):
         if ali:
-            os.system(
-                f'{PIP} install {pkg} -i https://mirrors.aliyun.com/pypi/simple {REDIRECT_SEG}'
-            )
+            os.system(f'{PIP} install {pkg} {UPGRADE} -i '
+                      f'https://mirrors.aliyun.com/pypi/simple {REDIRECT_SEG}')
         elif douban:
             os.system(
-                f'{PIP} install {pkg} -i https://pypi.douban.com/simple {REDIRECT_SEG}'
-            )
+                f'{PIP} install {pkg} {UPGRADE} -i https://pypi.douban.com/simple'
+                f' {REDIRECT_SEG}')
         else:
             os.system(
-                f'{PIP} install {pkg} -i https://pypi.org/simple {REDIRECT_SEG}'
+                f'{PIP} install {pkg} {UPGRADE} -i https://pypi.org/simple {REDIRECT_SEG}'
             )
 
 
