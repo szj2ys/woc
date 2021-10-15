@@ -131,11 +131,16 @@ def tree(path):
              help_options_color='cyan',
              short_help='install python package')
 @click.argument('pkgs', nargs=-1, required=True)
-@click.option('-p',
-              '--pypi',
+@click.option('-a',
+              '--ali',
               is_flag=True,
               show_default=True,
-              help="to use pypi official source")
+              help="use aliyun pypi source")
+@click.option('-d',
+              '--douban',
+              is_flag=True,
+              show_default=True,
+              help="use douban pypi source")
 @click.option('-u',
               '--upgrade',
               is_flag=True,
@@ -151,7 +156,7 @@ def tree(path):
               is_flag=True,
               show_default=True,
               help="install package in pipenv virtualenv")
-def pip(pkgs, pypi, upgrade, hide, virtualenv):
+def pip(pkgs, ali, douban, upgrade, hide, virtualenv):
 
     if upgrade:
         subprocess.run('pip install --upgrade pip'.split())
@@ -173,17 +178,18 @@ def pip(pkgs, pypi, upgrade, hide, virtualenv):
 
     # for pkg in tqdm(pkgs):
     for pkg in track(pkgs, description=''):
-        try:
-            if pypi:
-                os.system(
-                    f'{PIP} install {pkg} -i https://pypi.org/simple {REDIRECT_SEG}'
-                )
-            else:
-                os.system(
-                    f'{PIP} install {pkg} -i https://mirrors.aliyun.com/pypi/simple {REDIRECT_SEG}'
-                )
-        except:
-            raise
+        if ali:
+            os.system(
+                f'{PIP} install {pkg} -i https://mirrors.aliyun.com/pypi/simple {REDIRECT_SEG}'
+            )
+        elif douban:
+            os.system(
+                f'{PIP} install {pkg} -i https://pypi.douban.com/simple {REDIRECT_SEG}'
+            )
+        else:
+            os.system(
+                f'{PIP} install {pkg} -i https://pypi.org/simple {REDIRECT_SEG}'
+            )
 
 
 @cli.command(cls=HelpColorsCommand,
@@ -388,24 +394,42 @@ def pypi(publish, clean):
 @cli.command(cls=HelpColorsCommand,
              help_options_color='cyan',
              help='run python script')
-@click.argument('application', nargs=1, required=True)
+@click.argument('script', nargs=1, required=True)
 @click.option('-d', '--logdir', default='logs', help='log directory')
-def run(application, logdir):
+@click.option('-b',
+              '--background',
+              is_flag=True,
+              show_default=True,
+              help="run program in background")
+@click.option('-s',
+              '--show',
+              is_flag=True,
+              show_default=True,
+              help="show output in terminal")
+def run(script, logdir, background, show):
     # pipenv path
     PIPENV = subprocess.getoutput('which pipenv')
     CHECK_PIPENV = os.system('pipenv --venv')
-    LOG_PATH = f'''{logdir}/{get_pure_filename(application)}'''
+    LOG_PATH = f'''{logdir}/{get_pure_filename(script)}'''
     LOG_FILE = f'''{LOG_PATH}/{datetime.now().strftime(
         "%Y-%m-%d:%H:%M:%S")}.log'''
     Path(LOG_PATH).mkdir(parents=True, exist_ok=True)
 
+    REDIRECT_SEG = redirect(background)
+
     if CHECK_PIPENV == 0:
-        # exist pipenv environment
-        os.system(f'''{PIPENV} run python3 {application} >>{LOG_FILE} 
-        2>&1 &''')
+        # if exist pipenv environment
+        if show:
+            os.system(f'''{PIPENV} run python3 {script}''')
+        else:
+            os.system(
+                f'''{PIPENV} run python3 {script} >>{LOG_FILE} {REDIRECT_SEG}'''
+            )
     else:
-        os.system(f'''python3 {application} >>{LOG_FILE} 
-                2>&1 &''')
+        if show:
+            os.system(f'''python3 {script}''')
+        else:
+            os.system(f'''python3 {script} >>{LOG_FILE} {REDIRECT_SEG}''')
 
 
 @cli.command(cls=HelpColorsCommand,

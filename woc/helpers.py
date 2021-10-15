@@ -39,10 +39,17 @@ WINDOWS = sys.platform.startswith("win") or (sys.platform == "cli"
 
 
 def redirect(hide: bool = False):
+    """
+    use `2>&1` to redirect the output of the error message to standard output
+
+    :param hide:
+    :return:
+    """
     if WINDOWS:
         return ''
     elif hide:
-        return ' >/dev/null 2>&1'
+        # the final & is to make the program continue when terminal exit
+        return ' 2>&1 &'
     else:
         return ''
 
