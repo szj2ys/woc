@@ -28,13 +28,14 @@ case $input in
     ;;
 esac
 
-# create virtual environment, default python version is 3.7
-read -p "请输入Python版本: " input
-if [ ! -n "$input" ] ;then
-    pipenv --python `which python3`
-else
-    pipenv --python ${input}
-fi
+# create virtual environment, use default python version
+pipenv --python `which python3`
+#read -p "请输入Python版本: " input
+#if [ ! -n "$input" ] ;then
+#    pipenv --python `which python3`
+#else
+#    pipenv --python ${input}
+#fi
 
 PIPENV=`pipenv --venv`
 PREFIX="${PIPENV}/bin/"
