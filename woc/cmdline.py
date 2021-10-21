@@ -400,38 +400,38 @@ def pypi(publish, clean):
              help_options_color='cyan',
              help='run python script')
 @click.argument('script', nargs=1, required=True)
-@click.option('-d', '--logdir', default='logs', help='log directory')
+@click.option('-D',
+              '--logdir',
+              default=None,
+              show_default=True,
+              help='log directory')
 @click.option('-b',
               '--background',
               is_flag=True,
               show_default=True,
               help="run program in background")
-@click.option('-s',
-              '--show',
-              is_flag=True,
-              show_default=True,
-              help="show output in terminal")
-def run(script, logdir, background, show):
+def run(script, logdir, background):
     # pipenv path
     PIPENV = subprocess.getoutput('which pipenv')
     CHECK_PIPENV = os.system('pipenv --venv')
-    LOG_PATH = f'''{logdir}/{get_pure_filename(script)}'''
-    LOG_FILE = f'''{LOG_PATH}/{datetime.now().strftime(
-        "%Y-%m-%d:%H:%M:%S")}.log'''
-    Path(LOG_PATH).mkdir(parents=True, exist_ok=True)
+    if logdir:
+        LOG_PATH = f'''{logdir}/{get_pure_filename(script)}'''
+        LOG_FILE = f'''{LOG_PATH}/{datetime.now().strftime(
+            "%Y-%m-%d:%H:%M:%S")}.log'''
+        Path(LOG_PATH).mkdir(parents=True, exist_ok=True)
 
     REDIRECT_SEG = redirect(background)
 
     if CHECK_PIPENV == 0:
         # if exist pipenv environment
-        if show:
+        if not logdir:
             os.system(f'''{PIPENV} run python3 {script}''')
         else:
             os.system(
                 f'''{PIPENV} run python3 {script} >>{LOG_FILE} {REDIRECT_SEG}'''
             )
     else:
-        if show:
+        if not logdir:
             os.system(f'''python3 {script}''')
         else:
             os.system(f'''python3 {script} >>{LOG_FILE} {REDIRECT_SEG}''')
