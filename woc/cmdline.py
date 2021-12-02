@@ -6,6 +6,8 @@ import subprocess
 import traceback
 from datetime import datetime
 from pathlib import Path
+
+import rich
 from tqdm import tqdm
 from rich.progress import track
 from rich.console import Console
@@ -85,34 +87,103 @@ def cli():
 @click.option('-c',
               '--create',
               is_flag=True,
-              help="create pipenv environment base current directory")
+              help="create virtual environment")
 @click.option('-d',
               '--delete',
               is_flag=True,
-              help="delete pipenv environment base current directory")
-def pipenv(create, delete):
-    """Examples:
-
-        \b
-                create pipenv environment base current directory:
-                    - woc pipenv -c | --create
-                delete pipenv environment base current directory:
-                    - woc pipenv -d | --delete
-        """
-    CHECK_PIPENV = os.system('pipenv --venv')
-    if CHECK_PIPENV == 0:
-        # exist pipenv environment
-        pass
+              help="delete virtual environment")
+@click.option('-n',
+              '--name',
+              default="current dir name",
+              show_default=True,
+              help='environment name')
+def pipenv(create, delete, name):
+    DIRNAME = subprocess.getoutput('basename `pwd`')
+    if name == "current dir name":
+        ENVNAME = DIRNAME
+    else:
+        ENVNAME = name
     if create:
-        FILE = join(ROOT, 'scripts', 'create.sh')
-        subprocess.run(f'bash {FILE}'.split())
+        Console().print(
+            f"Create virtual environment [bold cyan]{ENVNAME}[/bold cyan]...")
+        confirm = click.confirm("Are you sure?", default=False)
+        if confirm:
+            os.system(f'pipenv --python `which python3`')
     if delete:
-        FILE = join(ROOT, 'scripts', 'delete.sh')
-        subprocess.run(f'bash {FILE}'.split())
-    if not (create or delete):
-        click.secho(
-            "I don't know what you're trying to do. Do you know what you're doing...",
-            fg='red')
+        os.system('pipenv --rm')
+
+
+@cli.command(context_settings=dict(ignore_unknown_options=True, ),
+             cls=HelpColorsCommand,
+             help_options_color='cyan',
+             short_help='conda virtual environment pipeline')
+@click.option('-c',
+              '--create',
+              is_flag=True,
+              help="create virtual environment")
+@click.option('-p',
+              '--python',
+              default="3.6",
+              show_default=True,
+              help='python version')
+@click.option('-n',
+              '--name',
+              default="current dir name",
+              show_default=True,
+              help='environment name')
+@click.option('-d',
+              '--delete',
+              is_flag=True,
+              help="delete virtual environment")
+@click.option('-l',
+              '--list',
+              is_flag=True,
+              help="list existing conda environments")
+def conda(create, delete, python, name, list):
+    DIRNAME = subprocess.getoutput('basename `pwd`')
+    if name == "current dir name":
+        ENVNAME = DIRNAME
+    else:
+        ENVNAME = name
+    if create:
+        Console().print(
+            f"Create virtual environment [bold cyan]{ENVNAME}[/bold cyan]...")
+        confirm = click.confirm("Are you sure?", default=False)
+        if confirm:
+            os.system(f'conda create -n {ENVNAME} python={python}')
+    if delete:
+        os.system(f'conda remove -n {ENVNAME} --all')
+    if list:
+        os.system(f'conda env list')
+
+
+@cli.command(context_settings=dict(ignore_unknown_options=True, ),
+             cls=HelpColorsCommand,
+             help_options_color='red',
+             short_help='jupyter environment pipeline')
+@click.option('-c', '--create', is_flag=True, help="create jupyter kernel")
+@click.option('-n',
+              '--name',
+              default="current dir name",
+              show_default=True,
+              help='kernel name')
+@click.option('-d', '--delete', is_flag=True, help="delete jupyter kernel")
+@click.option('-l',
+              '--list',
+              is_flag=True,
+              help="list existing jupyter kernel")
+def jupyter(create, delete, name, list):
+    DIRNAME = subprocess.getoutput('basename `pwd`')
+    if name == "current dir name":
+        ENVNAME = DIRNAME
+    else:
+        ENVNAME = name
+    if delete:
+        os.system(f'jupyter kernelspec remove {ENVNAME}')
+    if create:
+        os.system(f'python3 -m ipykernel install --user --name={ENVNAME}')
+    if list:
+        os.system('jupyter kernelspec list')
 
 
 @cli.command(cls=HelpColorsCommand,
