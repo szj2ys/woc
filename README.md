@@ -28,13 +28,16 @@ alt="License"/>
 ```shell
 pip install woc
 ```
-hahahahaha... now,`woc` is on your environment, having fun with it, enjoy ...
+hahahahaha... now, `woc` is on your environment, if you want to know what woc 
+can do, type command `woc -h`
 <p align="center">
     <img src="https://cdn.jsdelivr.net/gh/szj2ys/woc/woc/resources/wocface.png"/>
 </p>
-if you need help
+
+if you could not figure out how to use it's function, such as `tree`, just 
+type this command:
 ```shell
-woc -h
+woc tree -h
 ```
 
 ## Usage 🤔 💭 🤓 💬 😎
