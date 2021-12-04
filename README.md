@@ -40,7 +40,7 @@ type this command:
 woc tree -h
 ```
 <p align="center">
-    <img src="https://cdn.jsdelivr.net/gh/szj2ys/woc/woc/resources/treehelp.png"/>
+    <img src="https://cdn.jsdelivr.net/gh/szj2ys/woc/woc/resources/treehelp.jpg"/>
 </p>
 
 ## Usage 🤔 💭 🤓 💬 😎
