@@ -30,7 +30,7 @@ pip install woc
 ```
 hahahahaha... now,`woc` is on your environment, having fun with it, enjoy ...
 <p align="center">
-    <img width="250" src="https://cdn.jsdelivr.net/gh/szj2ys/woc/woc/resources/wocface.png"/>
+    <img src="https://cdn.jsdelivr.net/gh/szj2ys/woc/woc/resources/wocface.png"/>
 </p>
 if you need help
 ```shell
