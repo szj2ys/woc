@@ -39,6 +39,9 @@ type this command:
 ```shell
 woc tree -h
 ```
+<p align="center">
+    <img src="https://cdn.jsdelivr.net/gh/szj2ys/woc/woc/resources/tree-help.png"/>
+</p>
 
 ## Usage 🤔 💭 🤓 💬 😎
 
