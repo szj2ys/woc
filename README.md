@@ -34,7 +34,7 @@ can do, type command `woc -h`
     <img src="https://cdn.jsdelivr.net/gh/szj2ys/woc/woc/resources/wocface.png"/>
 </p>
 
-if you could not figure out how to use it's function, such as `tree`, just 
+If you could not figure out how to use it's function, such as `tree`, just 
 type this command:
 ```shell
 woc tree -h
@@ -42,8 +42,6 @@ woc tree -h
 <p align="center">
     <img src="https://cdn.jsdelivr.net/gh/szj2ys/woc/woc/resources/treehelp.jpg"/>
 </p>
-
-## Usage 🤔 💭 🤓 💬 😎
 
 Sometimes it is useful to be allowed to invoke more than one subcommand in one go.
 For instance:
