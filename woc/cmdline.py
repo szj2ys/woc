@@ -123,7 +123,7 @@ def pipenv(create, delete, name):
               help="create virtual environment")
 @click.option('-p',
               '--python',
-              default="3.8",
+              default="3.7",
               show_default=True,
               help='python version')
 @click.option('-n',
@@ -139,7 +139,11 @@ def pipenv(create, delete, name):
               '--list',
               is_flag=True,
               help="list existing conda environments")
-def conda(create, delete, python, name, list):
+@click.option('-a',
+              '--activate',
+              is_flag=True,
+              help="activate conda environment")
+def conda(create, delete, python, name, list, activate):
     DIRNAME = subprocess.getoutput('basename `pwd`')
     if name == "current dir name":
         ENVNAME = DIRNAME
@@ -155,6 +159,8 @@ def conda(create, delete, python, name, list):
         os.system(f'conda remove -n {ENVNAME} --all')
     if list:
         os.system(f'conda env list')
+    if activate:
+        os.system(f'conda activate {ENVNAME}')
 
 
 @cli.command(context_settings=dict(ignore_unknown_options=True, ),

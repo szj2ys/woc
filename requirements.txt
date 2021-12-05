@@ -4,9 +4,9 @@ pandas
 tqdm
 rich
 click
+click_help_colors
 shellingham
 tomlkit
-click_help_colors
 yapf
 autoflake
 twine
