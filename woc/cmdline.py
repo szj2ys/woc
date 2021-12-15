@@ -278,19 +278,23 @@ def pip(pkgs, ali, douban, upgrade, hide, virtualenv):
              help_options_color='cyan',
              short_help='simplified git pipeline')
 @click.option('-p', '--push', is_flag=True, help='push change to remote')
+@click.option('-b', '--beautify', is_flag=True, help='beautify code')
 @click.option('-m', '--msg', help='message')
 @click.option('-doc', '--doc', is_flag=True, help='show git tutorials')
 @click.option('-c', '--cache', is_flag=True, help='remove cached files')
 @click.option('-l', '--lock', is_flag=True, help='remove index.lock')
 @click.option('-t', '--tag', help='git tag')
-def git(push, msg, cache, lock, tag, doc):
+def git(push, msg, beautify, cache, lock, tag, doc):
 
     if push:
         if not msg:
             # If no massage is given, to use the current time instead
             msg = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        os.system(f'yapf -irp .;git add . --all;git commit -m "'
-                  f'{msg}";git push')
+        if beautify:
+            os.system(f'yapf -irp .;git add . --all;git commit -m "'
+                      f'{msg}";git push')
+        else:
+            os.system(f'git add . --all;git commit -m "' f'{msg}";git push')
 
     if lock:
         # fix bug: fatal: Unable to create 'xxx/.git/index.lock': File exists.
