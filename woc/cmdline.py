@@ -289,8 +289,10 @@ def git(push, msg, beautify, commit, cache, lock, tag, doc):
     if not msg:
         # If no massage is given, to use the current time instead
         msg = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
     if beautify:
         os.system(f'yapf -irp')
+
     if commit:
         os.system(f'git add . --all;git commit -m "' f'{msg}";')
 
@@ -300,6 +302,7 @@ def git(push, msg, beautify, commit, cache, lock, tag, doc):
     if lock:
         # fix bug: fatal: Unable to create 'xxx/.git/index.lock': File exists.
         subprocess.run('rm -f ./.git/index.lock'.split())
+
     if cache:
         subprocess.run('git rm -r --cache .'.split())
 
