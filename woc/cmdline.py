@@ -291,7 +291,7 @@ def git(push, msg, beautify, commit, cache, lock, tag, doc):
         msg = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     if beautify:
-        os.system(f'yapf -irp')
+        os.system(f'find . -name "*.py" -print0 | xargs -0 yapf -irp')
 
     if commit:
         os.system(f'git add . --all;git commit -m "' f'{msg}";')
