@@ -123,7 +123,7 @@ def pipenv(create, delete, name):
               help="create virtual environment")
 @click.option('-p',
               '--python',
-              default="3.7",
+              default="3.6",
               show_default=True,
               help='python version')
 @click.option('-n',
