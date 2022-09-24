@@ -89,6 +89,7 @@ class Config:
         merge_dicts(self._config, config)
 
     def all(self) -> Dict[str, Any]:
+
         def _all(config: Dict, parent_key: str = "") -> Dict:
             all_ = {}
 

@@ -123,7 +123,7 @@ def pipenv(create, delete, name):
               help="create virtual environment")
 @click.option('-p',
               '--python',
-              default="3.7",
+              default="3.9",
               show_default=True,
               help='Python version')
 @click.option('-n',
@@ -294,7 +294,8 @@ def git(push, msg, beautify, commit, cache, lock, tag, doc):
         os.system(f'find . -name "*.py" -print0 | xargs -0 yapf -irp')
 
     if commit:
-        os.system(f'git add . --all;git commit -m "' f'{msg}";')
+        os.system(f'git add . --all;git commit -m "'
+                  f'{msg}";')
 
     if push:
         os.system('git push')

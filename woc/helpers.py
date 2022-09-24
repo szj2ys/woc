@@ -180,6 +180,7 @@ def deprecated(func, *args, **kwargs):
 
 def deprecated_option(option_name, message=""):
     """ Marks an option as deprecated. """
+
     def caller(func, *args, **kwargs):
         if option_name in kwargs:
             warnings.warn(

@@ -2,6 +2,7 @@ from typing import Any
 
 
 class ConfigSource:
+
     def add_property(self, key: str, value: Any) -> None:
         raise NotImplementedError()
 

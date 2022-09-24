@@ -300,6 +300,7 @@ except ImportError:  # Python >= 2.5
 
 
 class ContextManager(_GeneratorContextManager):
+
     def __call__(self, func):
         """Context manager decorator"""
         return FunctionMaker.create(

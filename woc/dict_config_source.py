@@ -5,6 +5,7 @@ from .config_source import ConfigSource
 
 
 class DictConfigSource(ConfigSource):
+
     def __init__(self) -> None:
         self._config = {}
 

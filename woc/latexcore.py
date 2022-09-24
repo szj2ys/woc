@@ -99,6 +99,7 @@ class LatexVisitor(ast.NodeVisitor):
         information. Default ``False``.
 
     """
+
     def __init__(
         self,
         dummy_var,
