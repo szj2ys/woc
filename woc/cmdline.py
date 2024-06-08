@@ -310,6 +310,7 @@ def git(push, msg, beautify, commit, cache, lock, tag, doc):
     if tag:
         COMMAND = f'''git tag --annotate "{tag}" --message "{msg if msg else tag}"'''
         os.system(COMMAND)
+        os.system("git push --tags")
 
     if doc:
         render_markdown(join(ROOT, 'resources', 'GitTutorials.md'))
