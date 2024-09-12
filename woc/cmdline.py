@@ -14,6 +14,8 @@ from rich.console import Console
 from os.path import dirname, abspath, join, basename, splitext
 
 from woc.downloader import downloading
+from woc.get_local_ip_address import IPAddressManager
+
 try:
     from woc.math2latex import py2tex
     from woc.helpers import render_markdown, redirect, get_pure_filename
@@ -421,15 +423,15 @@ def install(pkg):
 
 @cli.command(cls=HelpColorsCommand,
              help_options_color='cyan',
-             short_help='toolkits...')
-@click.option('-ip', '--ip', is_flag=True, help='checkout ip address')
+             short_help='toolkits: get ip, serve dir.etc')
+@click.option('-ip', '--ip', is_flag=True, help='get ip address of localhost')
 @click.option('-serv',
               '--server',
               is_flag=True,
               help='server directory to browser')
-def kit(ip, server):
+def tool(ip, server):
     if ip:
-        os.system('ifconfig | grep "inet " | grep -v 127.0.0.1')
+        print(f"本机IP: {IPAddressManager.local_ip()}")
     if server:
         os.system('python3 -m http.server --directory ./')
 
@@ -443,7 +445,6 @@ def kit(ip, server):
               help='config jupyter notebook extensions and theme')
 @click.option('-al', '--alias', is_flag=True, help='print frequent used alias')
 def config(jupyter, alias):
-
     if jupyter:
         FILE = join(ROOT, 'scripts', 'setnotebook.sh')
         with Console().status("[bold green]configing jupyter..."):
@@ -526,7 +527,7 @@ def run(script, logdir, background):
 
 @cli.command(cls=HelpColorsCommand,
              help_options_color='cyan',
-             help='download url')
+             help='download url when file are very large')
 @click.argument('args', nargs=-1, required=True)
 @click.option('-d',
               '--dir',
@@ -536,21 +537,6 @@ def run(script, logdir, background):
               help="download directory")
 def download(args, dir):
     downloading(args, dir)
-
-
-@cli.command(cls=HelpColorsCommand,
-             help_options_color='cyan',
-             short_help='render math expression into latex')
-@click.argument('math_expression', nargs=1, required=True)
-def latex(math_expression):
-    '''Example:
-
-    \b
-    woc latex 'x = 2*sqrt(2*pi*k*T_e/m_e)*(DeltaE/(k*T_e))**2*a_0**2'
-    '''
-    latex = py2tex(math_expression)
-    # latex = py2tex('x = 2*sqrt(2*pi*k*T_e/m_e)*(DeltaE/(k*T_e))**2*a_0**2')
-    Console().print(latex, style='green')
 
 
 def execute():
